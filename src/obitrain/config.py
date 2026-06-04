@@ -10,8 +10,7 @@ DEFAULT_BASE_URL = 'https://api.obitrain.com'
 class Config:
     """The effective configuration for a command, merged from flags, env, stored creds and defaults.
 
-    `store` is None when the token came from a flag or OBI_TOKEN — that path is ephemeral, so nothing
-    is persisted and no refresh is attempted.
+    `store` is None when the token came from --token or OBI_TOKEN — ephemeral, nothing is persisted.
     """
 
     base_url: str
@@ -20,12 +19,7 @@ class Config:
     store: CredentialStore | None
 
     @property
-    def refreshable(self) -> bool:
-        return self.store is not None and bool(self.creds.refresh_token)
-
-    @property
     def base_url_mismatch(self) -> bool:
-        """True when the stored creds were minted against a different base_url than the effective one."""
         return bool(self.creds.base_url and self.creds.base_url != self.base_url)
 
 

@@ -9,7 +9,7 @@ from obitrain.errors import ObiError
 
 
 def test_save_load_roundtrip(store):
-    creds = Credentials(access_token='a', refresh_token='r', refresh_expires_at='2027', base_url='https://x')
+    creds = Credentials(access_token='a', base_url='https://x')
     store.save(creds)
     assert store.load() == creds
 

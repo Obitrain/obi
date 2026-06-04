@@ -62,15 +62,54 @@ class CountryItem(TypedDict):
     country: str
 
 
+class CreateTokenReq(TypedDict):
+    description: NotRequired[str | None]
+    expires_at: NotRequired[str | None]
+
+
 class DeleteSessionsResp(TypedDict):
     status: str
     ids: list[str]
+
+
+class DeviceApproveReq(TypedDict):
+    user_code: str
+
+
+class DeviceApproveResp(TypedDict):
+    description: str | None
 
 
 class DeviceInfos(TypedDict):
     os: str
     os_version: str
     system_name: str
+
+
+class DeviceInitReq(TypedDict):
+    description: NotRequired[str | None]
+
+
+class DeviceInitResp(TypedDict):
+    device_code: str
+    user_code: str
+    expires_in: int
+    interval: int
+
+
+class DeviceLookupResp(TypedDict):
+    description: str | None
+    expires_in: int
+
+
+class DeviceTokenReq(TypedDict):
+    device_code: str
+
+
+class DeviceTokenResp(TypedDict):
+    token: str
+    description: str | None
+    created_at: str
 
 
 type DistanceSystem = Literal[0, 1]
@@ -512,6 +551,11 @@ class SportItem(TypedDict):
     sport: str | None
 
 
+class SportMetricsResp(TypedDict):
+    default: list[str]
+    overrides: dict[str, list[str]]
+
+
 class StatusResp(TypedDict):
     status: str
 
@@ -579,6 +623,21 @@ class ThumbnailItem(TypedDict):
     file_type: str
     width: int
     height: int
+
+
+class TokenCreatedResp(TypedDict):
+    id: int
+    token: str
+    description: str | None
+    expires_at: str | None
+    created_at: str
+
+
+class TokenResp(TypedDict):
+    id: int
+    description: str | None
+    expires_at: str | None
+    created_at: str
 
 
 type TrainingStatus = Literal[0, 1]
@@ -1067,6 +1126,7 @@ class SessionResp(TypedDict):
     speed_max: float | None
     heart_zones: list[HRZone]
     device_name: str | None
+    sport_id: int | None
     can_edit: bool
     geo: SessionGeo | None
     exercises: list[ApiRoutersTrainingSessionModelsExerciseItem]
@@ -1096,6 +1156,10 @@ class TemplatePostModel(TypedDict):
     groups: NotRequired[list[TemplateGroupItemPost] | None]
     tags: NotRequired[list[str] | None]
     name: str
+
+
+class TokenListResp(TypedDict):
+    tokens: list[TokenResp]
 
 
 class TrainingTemplateGETModel(TypedDict):

@@ -57,7 +57,7 @@ async def _run(
         )
         return EXIT_OK
 
-    async with ObiClient(config.base_url, config.creds, config.store) as client:
+    async with ObiClient(config.base_url, config.creds) as client:
         resp = await client.request(
             resolved_method,
             _target(path),

@@ -17,7 +17,7 @@ _METHODS = ('get', 'post', 'put', 'patch', 'delete')
 
 @cache
 def _spec() -> dict[str, Any]:
-    return json.loads((files('obitrain') / 'openapi.json').read_text())
+    return json.loads((files('obitrain.api') / 'openapi.json').read_text())
 
 
 def _operations() -> list[dict[str, Any]]:

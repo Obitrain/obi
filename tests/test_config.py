@@ -33,7 +33,6 @@ def test_token_is_ephemeral_and_storeless(cfg_dir, monkeypatch):
     cfg = resolve_config()
     assert cfg.store is None
     assert cfg.creds.access_token == 'envtok'
-    assert cfg.refreshable is False
 
 
 def test_profile_from_env(cfg_dir, monkeypatch):
