@@ -141,6 +141,43 @@ def _content_schemas(content: dict[str, Any]) -> dict[str, Any]:
     return {media: spec.get('schema') for media, spec in content.items()}
 
 
+def hint_for(method: str, path: str, status: int) -> str | None:
+    """Build a recovery hint for a failed `obi api` call from the vendored spec, so agents
+    can self-correct on 404/405/422 without leaving the terminal."""
+    template = path if path in _spec()['paths'] else _match_template(path)
+    if template is None:
+        if status in (404, 405):
+            needle = path.rstrip('/').rsplit('/', 1)[-1]
+            return f'path not in the API spec; try `obi schema list --grep {needle}`'
+        return None
+    verbs = {m for m in _spec()['paths'][template] if m in _METHODS}
+    if status == 405 or (status == 404 and method.lower() not in verbs):
+        return f'{template} supports {sorted(v.upper() for v in verbs)}'
+    if status == 422 and method.lower() in verbs:
+        op = _spec()['paths'][template][method.lower()]
+        required = [
+            f'{p["name"]} ({p["in"]}, {_fmt_type(p.get("schema"))})'
+            for p in op.get('parameters', [])
+            if p.get('required')
+        ]
+        parts = []
+        if required:
+            parts.append(f'required params: {", ".join(required)}')
+        if op.get('requestBody', {}).get('required'):
+            parts.append('a JSON body is required')
+        parts.append(f"see `obi schema show '{template}'{'' if len(verbs) == 1 else f' -X {method.upper()}'}`")
+        return '; '.join(parts)
+    return None
+
+
+def _fmt_type(schema: dict[str, Any] | None) -> str:
+    if not schema:
+        return 'unknown'
+    if 'enum' in schema:
+        return 'enum: ' + '|'.join(str(v) for v in schema['enum'])
+    return schema.get('format') or schema.get('type') or 'unknown'
+
+
 def _schema_definitions(op: dict[str, Any]) -> dict[str, Any]:
     """Resolve the operation's referenced component schemas, transitively, to their definitions."""
     components = _spec().get('components', {}).get('schemas', {})

@@ -76,6 +76,10 @@ async def _run(
     if status == 401:
         render_error('auth_required', detail='not authenticated; run `obi auth login`', **fields)
         return EXIT_AUTH
+    if status in (404, 405, 422):
+        from obitrain.api.schema import hint_for
+
+        fields['hint'] = hint_for(resolved_method, path, status)
     render_error('http_error', retry_after=retry_after, **fields)
     return EXIT_SERVER if status >= 500 else EXIT_CLIENT
 
