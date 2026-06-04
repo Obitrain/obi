@@ -4,7 +4,7 @@ name: Spec drift
 # PR when it drifted. Runs weekly, on demand (workflow_dispatch), or triggered from outside
 # (repository_dispatch type "spec-drift", e.g. by the obitrain-api release pipeline).
 #
-# Requires the GITLAB_TOKEN secret: a GitLab token with read_api on obitrain/obitrain-api.
+# Requires the OBITRAIN_API_TOKEN secret: a GitLab token with read_api on obitrain/obitrain-api.
 
 on:
   schedule:
@@ -28,7 +28,7 @@ jobs:
 
       - name: Fetch the spec at the latest obitrain-api release tag
         env:
-          GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
+          GITLAB_TOKEN: ${{ secrets.OBITRAIN_API_TOKEN }}
         run: |
           set -euo pipefail
           api="https://gitlab.com/api/v4/projects/obitrain%2Fobitrain-api"
