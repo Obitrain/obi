@@ -21,29 +21,21 @@ jobs:
   refresh-spec:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v5
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+      - uses: astral-sh/setup-uv@d4b2f3b6ecc6e67c4457f6d3e41ec42d3d0fcb86 # v5.4.2
         with:
           enable-cache: true
 
       - name: Fetch the spec at the latest obitrain-api release tag
         env:
           GITLAB_TOKEN: ${{ secrets.OBITRAIN_API_TOKEN }}
-        run: |
-          set -euo pipefail
-          api="https://gitlab.com/api/v4/projects/obitrain%2Fobitrain-api"
-          tag=$(curl -fsS --header "PRIVATE-TOKEN: $GITLAB_TOKEN" \
-            "$api/repository/tags?order_by=version&sort=desc&per_page=1" | jq -r '.[0].name')
-          echo "Fetching openapi.json @ $tag"
-          curl -fsS --header "PRIVATE-TOKEN: $GITLAB_TOKEN" \
-            "$api/repository/files/static%2Fopenapi.json/raw?ref=$tag" -o static/openapi.json
-          echo "API_TAG=$tag" >> "$GITHUB_ENV"
+        run: bin/fetch-spec.sh
 
       - run: uv sync --group codegen
       - run: sh bin/codegen.sh
 
       - name: Open a PR if the spec drifted
-        uses: peter-evans/create-pull-request@v7
+        uses: peter-evans/create-pull-request@22a9089034f40e5a961c8808d113e2c98fb63676 # v7.0.9
         with:
           branch: chore/spec-drift
           base: master
