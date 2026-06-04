@@ -4,7 +4,21 @@ import json
 import pytest
 import yaml
 
+from obitrain.options import _resolve_output
 from obitrain.output import agent_mode, render, render_error
+
+
+@pytest.mark.parametrize(
+    ('output', 'as_json', 'expected'),
+    [
+        pytest.param(None, False, 'pretty', id='default-pretty'),
+        pytest.param(None, True, 'json', id='json-flag'),
+        pytest.param('yaml', False, 'yaml', id='explicit-output'),
+        pytest.param('yaml', True, 'yaml', id='explicit-output-wins-over-json-flag'),
+    ],
+)
+def test_resolve_output(output, as_json, expected):
+    assert _resolve_output(output, as_json) == expected
 
 
 def test_render_json():

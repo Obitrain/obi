@@ -62,6 +62,9 @@ obi api <path> [-X METHOD] [-q k=v ...] [-d BODY|@file|@-] [-H k:v ...] [-o json
 - `-d` implies `POST` unless `-X` says otherwise; `@file` and `@-` (stdin) are supported.
 - `-n` / `--dry-run` prints the fully resolved request (token redacted) without sending it.
 - Response bodies always go to **stdout**; diagnostics go to **stderr** as one-line JSON.
+- **Output is human-friendly by default** (syntax-highlighted on a TTY) and plain JSON whenever
+  output is piped or an agent environment is detected; `--json` (or `-o json|raw|yaml`) forces a
+  format explicitly.
 
 ### Exit codes
 
@@ -93,9 +96,10 @@ obi schema show /v1/stats/activity/weekly    # concrete paths resolve to their {
   calls → error repair) to stdout; `obi --help-json` gives the machine-readable command tree.
   No repo or web access needed.
 - **Deterministic output** — bodies on stdout, one-line JSON diagnostics on stderr, exit codes
-  above. Output is forced to plain JSON when an agent environment is detected (`CLAUDECODE`,
-  `CURSOR_AGENT`, `GITHUB_COPILOT`, `AMAZON_Q`, `OBI_AGENT_MODE`, …), when `NO_COLOR` is set, or
-  when stdout is not a TTY.
+  above. Pass `--json` to force plain JSON; in practice you already get it, since output falls
+  back to JSON when an agent environment is detected (`CLAUDECODE`, `CURSOR_AGENT`,
+  `GITHUB_COPILOT`, `AMAZON_Q`, `OBI_AGENT_MODE`, …), when `NO_COLOR` is set, or when stdout is
+  not a TTY.
 - **Errors carry their own fix** — `404`/`405`/`422` diagnostics include a `hint` field built from
   the bundled spec:
 

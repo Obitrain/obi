@@ -37,9 +37,10 @@ active profile. `obi auth set <token>` stores a token generated from the Account
 obi api /v1/activities -q size=5
 ```
 
-- **Output is JSON by default** and forced to JSON (no color) when an agent environment is detected
-  (`CLAUDECODE`, `CLAUDE_CODE`, `CURSOR_AGENT`, `GITHUB_COPILOT`, `AMAZON_Q`, `OBI_AGENT_MODE`),
-  when `NO_COLOR` is set, or when stdout is not a TTY.
+- **Output is plain JSON for you.** The human default is a highlighted view, but it falls back to
+  plain JSON when an agent environment is detected (`CLAUDECODE`, `CLAUDE_CODE`, `CURSOR_AGENT`,
+  `GITHUB_COPILOT`, `AMAZON_Q`, `OBI_AGENT_MODE`), when `NO_COLOR` is set, or when stdout is not a
+  TTY. Pass `--json` to force it explicitly.
 - **Successful bodies → stdout.** Parse them directly.
 - **Errors → stderr** as one-line JSON, with a deterministic exit code.
 
