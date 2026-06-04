@@ -32,7 +32,7 @@ def test_show_by_operation_id(run_cli):
     op = json.loads(out)
     assert op['path'] == '/v1/user'
     assert op['method'] == 'GET'
-    assert 'UserGetResp' in op['schemas']
+    assert op['schemas']['UserGetResp']['properties']  # definitions are inlined, not just names
 
 
 def test_show_ambiguous_method_errors(run_cli):

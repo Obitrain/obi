@@ -89,7 +89,7 @@ def show_op(
                 'responses': {
                     code: _content_schemas(r.get('content', {})) for code, r in op.get('responses', {}).items()
                 },
-                'schemas': sorted(_referenced_schemas(op)),
+                'schemas': _schema_definitions(op),
             },
             output,
         )
@@ -116,6 +116,23 @@ def _find_operation(ref: str, method: str | None) -> tuple[dict[str, Any], str, 
 
 def _content_schemas(content: dict[str, Any]) -> dict[str, Any]:
     return {media: spec.get('schema') for media, spec in content.items()}
+
+
+def _schema_definitions(op: dict[str, Any]) -> dict[str, Any]:
+    """Resolve the operation's referenced component schemas, transitively, to their definitions."""
+    components = _spec().get('components', {}).get('schemas', {})
+    pending = _referenced_schemas(op)
+    resolved: dict[str, Any] = {}
+    while pending:
+        name = pending.pop()
+        if name in resolved:
+            continue
+        definition = components.get(name)
+        if definition is None:
+            continue
+        resolved[name] = definition
+        pending |= _referenced_schemas(definition) - resolved.keys()
+    return dict(sorted(resolved.items()))
 
 
 def _referenced_schemas(node: Any) -> set[str]:
