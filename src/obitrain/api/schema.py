@@ -77,7 +77,12 @@ def show_op(
                 'tags': op.get('tags', []),
                 'summary': op.get('summary'),
                 'parameters': [
-                    {'name': p.get('name'), 'in': p.get('in'), 'required': p.get('required', False)}
+                    {
+                        'name': p.get('name'),
+                        'in': p.get('in'),
+                        'required': p.get('required', False),
+                        'schema': p.get('schema'),
+                    }
                     for p in op.get('parameters', [])
                 ],
                 'request_body': _content_schemas(op.get('requestBody', {}).get('content', {})),
