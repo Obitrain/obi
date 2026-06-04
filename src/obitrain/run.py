@@ -22,5 +22,12 @@ def _version() -> None:
     print(__version__)
 
 
+@cli.command('quickstart', help='Print the agent quickstart: discovery, auth, calling, error repair.')
+def _quickstart() -> None:
+    from importlib.resources import files
+
+    print((files('obitrain') / 'quickstart.md').read_text(), end='')
+
+
 def run() -> None:
     cli.run()
