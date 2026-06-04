@@ -3,6 +3,7 @@ site_name = "obi"
 site_description = "Public, agent-first CLI for the Obitrain API."
 site_url = "https://obitrain.github.io/obi/"
 copyright = "Copyright &copy; 2026 Obitrain"
+extra_css = ["stylesheets/extra.css"]
 
 nav = [
   { "Home" = "index.md" },
@@ -13,6 +14,8 @@ nav = [
 
 [project.theme]
 language = "en"
+logo = "assets/images/logo.png"
+favicon = "assets/images/favicon.ico"
 features = [
   "content.code.copy",
   "navigation.footer",
@@ -22,13 +25,21 @@ features = [
   "search.highlight",
 ]
 
+[project.theme.font]
+text = "Raleway"
+code = "JetBrains Mono"
+
 [[project.theme.palette]]
 scheme = "default"
+primary = "light-blue"
+accent = "teal"
 toggle.icon = "lucide/sun"
 toggle.name = "Switch to dark mode"
 
 [[project.theme.palette]]
 scheme = "slate"
+primary = "light-blue"
+accent = "teal"
 toggle.icon = "lucide/moon"
 toggle.name = "Switch to light mode"
 

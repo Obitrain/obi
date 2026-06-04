@@ -1,30 +1,46 @@
-# obi
-
-`obi` is a small, agent-first command-line client for the **Obitrain API**. It handles
-authentication (including transparent token refresh) and lets you call any endpoint with a single
-generic command, so both humans and AI agents can drive the API without bespoke per-endpoint tooling.
-
-## Install
+<div class="obi-hero">
+  <img src="assets/images/logo.png" alt="Obitrain" />
+  <h1>obi</h1>
+  <p>The agent-first CLI for the <strong>Obitrain API</strong> — authenticate once,
+  call any endpoint, discover the contract offline.</p>
+</div>
 
 ```bash
 uv tool install obitrain      # exposes the `obi` binary
-# or run without installing:
-uvx --from obitrain obi --help
+
+obi auth login                # approve a short code in the Obitrain app — no password
+obi api /v1/training/sessions -q limit=5
 ```
 
-## At a glance
-
-```bash
-obi auth login --email you@example.com          # authenticate (prompts for password)
-obi api /v1/activities -q size=1                # call any endpoint
-obi schema list --grep activities               # discover endpoints from the bundled OpenAPI spec
-```
+<div class="obi-cards">
+  <a href="auth/">
+    <strong>Authentication</strong>
+    Device-code login, API tokens, profiles, and headless usage with <code>OBI_TOKEN</code>.
+  </a>
+  <a href="api/">
+    <strong>Making requests</strong>
+    One generic <code>obi api</code> command: methods, query params, bodies, dry-run.
+  </a>
+  <a href="agent-quickstart/">
+    <strong>Agent quickstart</strong>
+    The contract for LLMs: JSON output, exit codes, and self-repairing error hints.
+  </a>
+</div>
 
 ## Why it fits agents
 
-- **JSON by default.** Output is machine-readable unless you ask for `pretty`/`yaml`.
+- **Deterministic output.** Bodies on stdout, one-line JSON diagnostics on stderr; plain JSON
+  whenever output is piped or an agent environment is detected (`--json` to force it).
 - **Deterministic exit codes.** `0` ok, `4` auth, `5` network, `6` server (5xx), `7` client (4xx).
-- **Self-describing.** `obi schema` exposes the API contract from the OpenAPI spec shipped in the package.
-- **No memorized URLs required**, but no hand-written wrappers to maintain either.
+- **Errors carry their own fix.** `404`/`405`/`422` diagnostics include a `hint` with the missing
+  parameters and the exact `obi schema show` command to run.
+- **Self-describing.** `obi schema` exposes the API contract from the bundled OpenAPI spec, and
+  `obi quickstart` prints the full agent guide — no web access needed.
 
-See [Authentication](auth.md), [Making requests](api.md) and the [Agent quickstart](agent-quickstart.md).
+## Why it fits humans
+
+- **Readable by default.** Tables and highlighted output on a TTY, with enum codes labeled
+  (`friends (2)`, not `2`).
+- **One command for everything.** No per-endpoint wrappers to learn or maintain.
+- **Safe by design.** Tokens stored per profile with `0600` permissions, revocable from the app;
+  `-n` dry-runs any request before sending it.

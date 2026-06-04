@@ -1,0 +1,108 @@
+/* Obitrain branding — tokens from obiapp-ui src/theme/colors.ts */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&display=swap');
+
+/* Light scheme */
+[data-md-color-scheme='default'] {
+  --md-primary-fg-color: #038cca;
+  --md-primary-fg-color--light: #4eb2e0;
+  --md-primary-fg-color--dark: #0e57ad;
+  --md-accent-fg-color: #02bd98;
+  --md-accent-fg-color--transparent: #02bd981a;
+  --md-typeset-a-color: #0e57ad;
+}
+
+/* Dark scheme */
+[data-md-color-scheme='slate'] {
+  --md-primary-fg-color: #59c7f8;
+  --md-primary-fg-color--light: #8ed9fa;
+  --md-primary-fg-color--dark: #1b6f9e;
+  --md-accent-fg-color: #32d3ae;
+  --md-accent-fg-color--transparent: #32d3ae1a;
+  --md-typeset-a-color: #59c7f8;
+  --md-default-bg-color: #0b1117;
+  --md-code-bg-color: #16202a;
+  --md-footer-bg-color: #16202a;
+  --md-footer-bg-color--dark: #0b1117;
+}
+
+/* Brand gradient header (blue → teal, like the app) */
+.md-header,
+.md-tabs {
+  background: linear-gradient(135deg, #038cca, #02bd98);
+}
+
+[data-md-color-scheme='slate'] .md-header,
+[data-md-color-scheme='slate'] .md-tabs {
+  background: linear-gradient(135deg, #1b98d6, #23c6a1);
+}
+
+/* Montserrat headings over Raleway body (obiweb convention) */
+.md-typeset h1,
+.md-typeset h2,
+.md-typeset h3,
+.md-typeset h4,
+.md-typeset h5,
+.md-typeset h6,
+.md-header__topic {
+  font-family: 'Montserrat', var(--md-text-font, sans-serif);
+  font-weight: 700;
+}
+
+/* Rounded surfaces, matching the app's 10px radius */
+.md-typeset .admonition,
+.md-typeset details,
+.md-typeset pre > code,
+.md-search__form {
+  border-radius: 10px;
+}
+
+/* Landing page helpers */
+.obi-hero {
+  text-align: center;
+  margin: 1.5rem 0 2rem;
+}
+
+.obi-hero img {
+  width: 112px;
+  height: 112px;
+}
+
+.obi-hero p {
+  font-size: 1.05rem;
+  color: var(--md-default-fg-color--light);
+}
+
+.obi-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: 0.8rem;
+  margin: 1.5rem 0;
+}
+
+.md-typeset .obi-cards a,
+.md-typeset .obi-cards a:hover,
+.md-typeset .obi-cards a:focus {
+  display: block;
+  padding: 1rem;
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 10px;
+  color: var(--md-default-fg-color);
+  text-decoration: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.obi-cards a:hover {
+  border-color: var(--md-accent-fg-color);
+  box-shadow: 0 2px 2.62px rgba(0, 0, 0, 0.23);
+}
+
+.obi-cards strong {
+  display: block;
+  font-family: 'Montserrat', sans-serif;
+  color: var(--md-primary-fg-color--dark);
+  margin-bottom: 0.3rem;
+}
+
+[data-md-color-scheme='slate'] .obi-cards strong {
+  color: var(--md-primary-fg-color);
+}
