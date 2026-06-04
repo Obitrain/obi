@@ -20,3 +20,4 @@ site/
 .env
 *.local
 .idea/
+.playwright-mcp/

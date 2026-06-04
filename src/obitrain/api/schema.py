@@ -7,7 +7,7 @@ from piou import CommandGroup, Option
 
 from obitrain.errors import ObiError
 from obitrain.options import OutputOpt
-from obitrain.output import OutputFormat, render
+from obitrain.output import OutputFormat, agent_mode, render, render_operation
 from obitrain.runner import guard
 
 schema_group = CommandGroup('schema', help='Discover API operations and models from the bundled OpenAPI spec.')
@@ -69,30 +69,29 @@ def show_op(
 ):
     with guard():
         op, path, verb = _find_operation(ref, method)
-        render(
-            {
-                'method': verb.upper(),
-                'path': path,
-                'operation_id': op.get('operationId'),
-                'tags': op.get('tags', []),
-                'summary': op.get('summary'),
-                'parameters': [
-                    {
-                        'name': p.get('name'),
-                        'in': p.get('in'),
-                        'required': p.get('required', False),
-                        'schema': p.get('schema'),
-                    }
-                    for p in op.get('parameters', [])
-                ],
-                'request_body': _content_schemas(op.get('requestBody', {}).get('content', {})),
-                'responses': {
-                    code: _content_schemas(r.get('content', {})) for code, r in op.get('responses', {}).items()
-                },
-                'schemas': _schema_definitions(op),
-            },
-            output,
-        )
+        payload = {
+            'method': verb.upper(),
+            'path': path,
+            'operation_id': op.get('operationId'),
+            'tags': op.get('tags', []),
+            'summary': op.get('summary'),
+            'parameters': [
+                {
+                    'name': p.get('name'),
+                    'in': p.get('in'),
+                    'required': p.get('required', False),
+                    'schema': p.get('schema'),
+                }
+                for p in op.get('parameters', [])
+            ],
+            'request_body': _content_schemas(op.get('requestBody', {}).get('content', {})),
+            'responses': {code: _content_schemas(r.get('content', {})) for code, r in op.get('responses', {}).items()},
+            'schemas': _schema_definitions(op),
+        }
+        if output == 'pretty' and not agent_mode():
+            render_operation(payload)
+        else:
+            render(payload, output)
 
 
 def _find_operation(ref: str, method: str | None) -> tuple[dict[str, Any], str, str]:

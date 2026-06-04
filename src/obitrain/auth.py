@@ -12,7 +12,15 @@ from obitrain.config import Config
 from obitrain.creds import Credentials, list_profiles
 from obitrain.errors import ApiError, AuthError, ObiError
 from obitrain.options import ConfigArg, OutputOpt
-from obitrain.output import OutputFormat, agent_mode, render
+from obitrain.output import (
+    OutputFormat,
+    agent_mode,
+    render,
+    render_auth_status,
+    render_confirm,
+    render_profiles,
+    render_whoami,
+)
 from obitrain.runner import execute
 
 auth_group = CommandGroup('auth', help='Authenticate with the Obitrain API.')
@@ -40,7 +48,10 @@ def set_token(
     _require_store(config)
     assert config.store is not None
     config.store.save(Credentials(access_token=value, base_url=config.base_url))
-    render({'status': 'token saved', 'profile': config.profile, 'base_url': config.base_url}, output)
+    if _pretty(output):
+        render_confirm('token saved', f'profile {config.profile}', config.base_url)
+    else:
+        render({'status': 'token saved', 'profile': config.profile, 'base_url': config.base_url}, output)
 
 
 @auth_group.command('clear', help='Remove stored credentials for the active profile.')
@@ -48,7 +59,10 @@ def clear(config: Config = ConfigArg, output: OutputFormat = OutputOpt):
     _require_store(config)
     assert config.store is not None
     config.store.clear()
-    render({'status': 'cleared', 'profile': config.profile}, output)
+    if _pretty(output):
+        render_confirm('cleared', f'profile {config.profile}')
+    else:
+        render({'status': 'cleared', 'profile': config.profile}, output)
 
 
 @auth_group.command('status', help='Show authentication status for the active profile.')
@@ -66,7 +80,10 @@ def status(
     }
     if show_token:
         info['access_token'] = config.creds.access_token
-    render(info, output)
+    if _pretty(output):
+        render_auth_status(info)
+    else:
+        render(info, output)
 
 
 @auth_group.command('whoami', help='Show the currently authenticated user.')
@@ -81,7 +98,14 @@ def token(config: Config = ConfigArg):
 
 @auth_group.command('profiles', help='List known credential profiles.')
 def profiles(config: Config = ConfigArg, output: OutputFormat = OutputOpt):
-    render({'active': config.profile, 'profiles': list_profiles()}, output)
+    if _pretty(output):
+        render_profiles(config.profile, list_profiles())
+    else:
+        render({'active': config.profile, 'profiles': list_profiles()}, output)
+
+
+def _pretty(output: OutputFormat) -> bool:
+    return output == 'pretty' and not agent_mode()
 
 
 def _require_store(config: Config) -> None:
@@ -109,7 +133,10 @@ async def _login(config: Config, output: OutputFormat, description: str | None) 
         token = await _poll_device_token(client, data['device_code'], data['expires_in'], data['interval'])
 
     config.store.save(Credentials(access_token=token, base_url=config.base_url))
-    render({'status': 'logged in', 'profile': config.profile, 'base_url': config.base_url}, output)
+    if _pretty(output):
+        render_confirm('logged in', f'profile {config.profile}', config.base_url)
+    else:
+        render({'status': 'logged in', 'profile': config.profile, 'base_url': config.base_url}, output)
     return 0
 
 
@@ -146,10 +173,11 @@ async def _whoami(config: Config, output: OutputFormat) -> int:
         status_code, data, request_id = read_response(resp)
     if status_code >= 400:
         raise ApiError('whoami failed', status=status_code, body=data, request_id=request_id)
-    if output == 'pretty' and not agent_mode():
+    if _pretty(output):
         from obitrain.api.schema import annotate_enums
 
-        data = annotate_enums(data, 'GET', _WHOAMI_PATH)
+        render_whoami(annotate_enums(data, 'GET', _WHOAMI_PATH))
+        return 0
     render(data, output)
     return 0
 
