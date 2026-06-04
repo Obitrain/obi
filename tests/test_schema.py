@@ -1,5 +1,7 @@
 import json
 
+import pytest
+
 
 def test_list_all_operations(run_cli):
     code, out, _ = run_cli('schema', 'list')
@@ -12,7 +14,21 @@ def test_list_all_operations(run_cli):
 def test_list_grep_filters(run_cli):
     _, out, _ = run_cli('schema', 'list', '--grep', 'activities')
     ops = json.loads(out)
-    assert ops and all('activities' in o['path'] for o in ops)
+    assert ops and any('activities' in o['path'] for o in ops)
+
+
+@pytest.mark.parametrize(
+    ('needle', 'expected_path'),
+    [
+        pytest.param('distance', '/v1/stats/activity/{range_type}', id='schema-field-name'),
+        pytest.param('weekly', '/v1/stats/activity/{range_type}', id='param-enum-value'),
+        pytest.param('user stats', '/v1/stats/activity/{range_type}', id='summary-text'),
+        pytest.param('sportitem', '/v1/stats/activity/{range_type}', id='schema-name'),
+    ],
+)
+def test_list_grep_searches_beyond_path(run_cli, needle, expected_path):
+    _, out, _ = run_cli('schema', 'list', '--grep', needle)
+    assert expected_path in {o['path'] for o in json.loads(out)}
 
 
 def test_list_tag_filters(run_cli):

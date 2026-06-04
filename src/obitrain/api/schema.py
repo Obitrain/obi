@@ -41,15 +41,32 @@ def _operations() -> list[dict[str, Any]]:
 def list_ops(
     output: OutputFormat = OutputOpt,
     tag: str | None = Option(None, '--tag', help='Only operations with this tag.'),
-    grep: str | None = Option(None, '--grep', help='Filter by substring in path or operation id.'),
+    grep: str | None = Option(
+        None, '--grep', help='Filter by substring in path, operation id, summary, tags, params or schema fields.'
+    ),
 ):
     ops = _operations()
     if tag:
         ops = [o for o in ops if tag in o['tags']]
     if grep:
         needle = grep.lower()
-        ops = [o for o in ops if needle in o['path'].lower() or needle in (o['operation_id'] or '').lower()]
+        ops = [o for o in ops if needle in _haystack(o['method'], o['path'])]
     render(ops, output)
+
+
+def _haystack(method: str, path: str) -> str:
+    """Lowercase search text for one operation: path, id, summary, tags, parameter names and enum
+    values, plus referenced schema names and their property names — so `--grep distance` finds the
+    operations whose payloads carry a `distance` field."""
+    op = _spec()['paths'][path][method.lower()]
+    parts = [path, op.get('operationId') or '', op.get('summary') or '', *op.get('tags', [])]
+    for param in op.get('parameters', []):
+        parts.append(param.get('name') or '')
+        parts.extend(str(v) for v in (param.get('schema') or {}).get('enum') or [])
+    for name, definition in _schema_definitions(op).items():
+        parts.append(name)
+        parts.extend(definition.get('properties') or {})
+    return ' '.join(parts).lower()
 
 
 @schema_group.command('tags', help='List tags with their operation counts.')
