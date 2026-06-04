@@ -25,15 +25,32 @@
   --md-footer-bg-color--dark: #0b1117;
 }
 
-/* Brand gradient header (blue → teal, like the app) */
-.md-header,
-.md-tabs {
-  background: linear-gradient(135deg, #038cca, #02bd98);
+/* Clean topbar like the app (topbarBackground: white / #121a23) */
+[data-md-color-scheme='default'] .md-header,
+[data-md-color-scheme='default'] .md-tabs {
+  background: #fff;
+  color: #0e57ad;
+  box-shadow: 0 1px 2.22px rgba(0, 0, 0, 0.16);
+}
+
+[data-md-color-scheme='default'] .md-search__form {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+[data-md-color-scheme='default'] .md-search__input::placeholder,
+[data-md-color-scheme='default'] .md-search__icon {
+  color: hsl(209, 13%, 51%);
 }
 
 [data-md-color-scheme='slate'] .md-header,
 [data-md-color-scheme='slate'] .md-tabs {
-  background: linear-gradient(135deg, #1b98d6, #23c6a1);
+  background: #121a23;
+  color: #d7e2ec;
+  box-shadow: 0 1px 2.22px rgba(0, 0, 0, 0.55);
+}
+
+[data-md-color-scheme='slate'] .md-search__form {
+  background: rgba(255, 255, 255, 0.08);
 }
 
 /* Montserrat headings over Raleway body (obiweb convention) */
