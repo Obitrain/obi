@@ -42,6 +42,27 @@ def test_show_matches_concrete_path_against_template(run_cli):
     assert any(p['name'] == 'from_date' and p['required'] for p in op['parameters'])
 
 
+def test_annotate_enums_labels_response_fields():
+    from obitrain.api.schema import annotate_enums
+
+    payload = {
+        'user': {'visibility': 2, 'gender': 0, 'quotas': {'exercises': {'current': 217}}, 'verified': True},
+    }
+    annotated = annotate_enums(payload, 'GET', '/v1/user')
+
+    assert annotated['user']['visibility'] == 'friends (2)'
+    assert annotated['user']['gender'] == 'male (0)'  # anyOf [GenderType, null]
+    assert annotated['user']['quotas']['exercises']['current'] == 217  # untouched
+    assert annotated['user']['verified'] is True  # bools never relabeled
+
+
+def test_annotate_enums_unknown_path_is_noop():
+    from obitrain.api.schema import annotate_enums
+
+    payload = {'visibility': 2}
+    assert annotate_enums(payload, 'GET', '/v1/not-an-endpoint') == payload
+
+
 def test_show_ambiguous_method_errors(run_cli):
     code, _, err = run_cli('schema', 'show', '/v1/user')
     assert code == 1

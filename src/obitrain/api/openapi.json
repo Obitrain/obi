@@ -3,7 +3,7 @@
   "info": {
     "title": "Obitrain API",
     "description": "API Endpoint for Obitrain",
-    "version": "1.91.0"
+    "version": "1.92.0"
   },
   "paths": {
     "/v1/user/login": {
@@ -7125,7 +7125,11 @@
           0,
           1
         ],
-        "title": "DistanceSystem"
+        "title": "DistanceSystem",
+        "x-enum-varnames": [
+          "metric",
+          "imperial"
+        ]
       },
       "EquipmentItem": {
         "properties": {
@@ -7857,7 +7861,12 @@
           1,
           2
         ],
-        "title": "GenderType"
+        "title": "GenderType",
+        "x-enum-varnames": [
+          "male",
+          "female",
+          "others"
+        ]
       },
       "GeoBoundaries": {
         "properties": {
@@ -9996,7 +10005,12 @@
           1,
           2
         ],
-        "title": "Objective"
+        "title": "Objective",
+        "x-enum-varnames": [
+          "gain_weigh",
+          "lose_weight",
+          "improve_health"
+        ]
       },
       "PatchMeasurementResp": {
         "properties": {
@@ -10536,7 +10550,12 @@
           1,
           2
         ],
-        "title": "ProfileType"
+        "title": "ProfileType",
+        "x-enum-varnames": [
+          "private",
+          "public",
+          "friends"
+        ]
       },
       "QuotaLimit": {
         "properties": {
@@ -12582,7 +12601,11 @@
           0,
           1
         ],
-        "title": "TemperatureSystem"
+        "title": "TemperatureSystem",
+        "x-enum-varnames": [
+          "celsius",
+          "fahrenheit"
+        ]
       },
       "TemplateExerciseItemPost": {
         "properties": {
@@ -13082,7 +13105,12 @@
           1,
           2
         ],
-        "title": "ThirdPartyStatus"
+        "title": "ThirdPartyStatus",
+        "x-enum-varnames": [
+          "not_connected",
+          "connected",
+          "need_reconnection"
+        ]
       },
       "ThumbnailItem": {
         "properties": {
@@ -13227,7 +13255,11 @@
           0,
           1
         ],
-        "title": "TrainingStatus"
+        "title": "TrainingStatus",
+        "x-enum-varnames": [
+          "to_do",
+          "done"
+        ]
       },
       "TrainingTemplateGETModel": {
         "properties": {
@@ -13749,7 +13781,12 @@
           1,
           2
         ],
-        "title": "VisibilityType"
+        "title": "VisibilityType",
+        "x-enum-varnames": [
+          "private",
+          "public",
+          "friends"
+        ]
       },
       "WeightSystem": {
         "type": "integer",
@@ -13757,7 +13794,11 @@
           0,
           1
         ],
-        "title": "WeightSystem"
+        "title": "WeightSystem",
+        "x-enum-varnames": [
+          "kilogram",
+          "pound"
+        ]
       },
       "WithingsAuthUrlResp": {
         "properties": {

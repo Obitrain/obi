@@ -12,7 +12,7 @@ from obitrain.config import Config
 from obitrain.creds import Credentials, list_profiles
 from obitrain.errors import ApiError, AuthError, ObiError
 from obitrain.options import ConfigArg, OutputOpt
-from obitrain.output import OutputFormat, render
+from obitrain.output import OutputFormat, agent_mode, render
 from obitrain.runner import execute
 
 auth_group = CommandGroup('auth', help='Authenticate with the Obitrain API.')
@@ -146,6 +146,10 @@ async def _whoami(config: Config, output: OutputFormat) -> int:
         status_code, data, request_id = read_response(resp)
     if status_code >= 400:
         raise ApiError('whoami failed', status=status_code, body=data, request_id=request_id)
+    if output == 'pretty' and not agent_mode():
+        from obitrain.api.schema import annotate_enums
+
+        data = annotate_enums(data, 'GET', _WHOAMI_PATH)
     render(data, output)
     return 0
 

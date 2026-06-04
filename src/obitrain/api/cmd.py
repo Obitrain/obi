@@ -10,7 +10,7 @@ from obitrain.client import ObiClient, read_response
 from obitrain.config import Config
 from obitrain.errors import EXIT_AUTH, EXIT_CLIENT, EXIT_OK, EXIT_SERVER, ObiError
 from obitrain.options import ConfigArg, OutputOpt
-from obitrain.output import OutputFormat, render, render_error
+from obitrain.output import OutputFormat, agent_mode, render, render_error
 
 
 def api_cmd(
@@ -69,6 +69,10 @@ async def _run(
         status, payload, request_id = read_response(resp)
         retry_after = resp.headers.get('retry-after')
 
+    if status < 400 and output == 'pretty' and not agent_mode():
+        from obitrain.api.schema import annotate_enums
+
+        payload = annotate_enums(payload, resolved_method, path)
     _render_payload(payload, output)
     if status < 400:
         return EXIT_OK

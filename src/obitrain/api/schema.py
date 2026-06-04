@@ -174,8 +174,75 @@ def _fmt_type(schema: dict[str, Any] | None) -> str:
     if not schema:
         return 'unknown'
     if 'enum' in schema:
+        names = schema.get('x-enum-varnames')
+        if names and len(names) == len(schema['enum']):
+            return 'enum: ' + '|'.join(f'{n}({v})' for n, v in zip(names, schema['enum']))
         return 'enum: ' + '|'.join(str(v) for v in schema['enum'])
     return schema.get('format') or schema.get('type') or 'unknown'
+
+
+def annotate_enums(value: Any, method: str, path: str) -> Any:
+    """Replace enum-coded response fields with 'name (value)' using the operation's response
+    schema, so humans read `friends (2)` instead of `2`. Leaves unknown fields untouched."""
+    labels = _enum_labels(method, path)
+    if not labels:
+        return value
+
+    def walk(node: Any, key: str | None = None) -> Any:
+        if isinstance(node, dict):
+            return {k: walk(v, k) for k, v in node.items()}
+        if isinstance(node, list):
+            return [walk(item, key) for item in node]
+        if key in labels and not isinstance(node, bool) and isinstance(node, int) and node in labels[key]:
+            return f'{labels[key][node]} ({node})'
+        return node
+
+    return walk(value)
+
+
+def _enum_labels(method: str, path: str) -> dict[str, dict[int, str]]:
+    """Property name -> {value: name} for enum-typed fields in the operation's 200 response."""
+    template = path if path in _spec()['paths'] else _match_template(path)
+    if template is None:
+        return {}
+    op = _spec()['paths'][template].get(method.lower())
+    if op is None:
+        return {}
+    components = _spec().get('components', {}).get('schemas', {})
+
+    def deref(schema: dict[str, Any]) -> dict[str, Any]:
+        if '$ref' in schema:
+            return components.get(schema['$ref'].rsplit('/', 1)[-1], {})
+        return schema
+
+    labels: dict[str, dict[int, str]] = {}
+    seen: set[int] = set()
+
+    def walk(schema: dict[str, Any]) -> None:
+        schema = deref(schema)
+        if id(schema) in seen:
+            return
+        seen.add(id(schema))
+        for name, prop in schema.get('properties', {}).items():
+            resolved = deref(prop)
+            # enums often hide behind anyOf [Enum, null]
+            candidates = [resolved, *(deref(s) for s in (*resolved.get('anyOf', []), *resolved.get('oneOf', [])))]
+            for candidate in candidates:
+                names = candidate.get('x-enum-varnames')
+                values = candidate.get('enum')
+                if names and values and len(names) == len(values):
+                    labels[name] = dict(zip(values, names))
+                    break
+            walk(resolved)
+        for sub in (*schema.get('anyOf', []), *schema.get('oneOf', []), *schema.get('allOf', [])):
+            walk(sub)
+        if 'items' in schema and isinstance(schema['items'], dict):
+            walk(schema['items'])
+
+    for media in op.get('responses', {}).get('200', {}).get('content', {}).values():
+        if isinstance(media.get('schema'), dict):
+            walk(media['schema'])
+    return labels
 
 
 def _schema_definitions(op: dict[str, Any]) -> dict[str, Any]:
