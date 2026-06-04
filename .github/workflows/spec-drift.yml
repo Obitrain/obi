@@ -1,0 +1,59 @@
+name: Spec drift
+
+# Refreshes the vendored OpenAPI spec from the latest obitrain-api release tag and opens a
+# PR when it drifted. Runs weekly, on demand (workflow_dispatch), or triggered from outside
+# (repository_dispatch type "spec-drift", e.g. by the obitrain-api release pipeline).
+#
+# Requires the GITLAB_TOKEN secret: a GitLab token with read_api on obitrain/obitrain-api.
+
+on:
+  schedule:
+    - cron: '0 6 * * 1' # Mondays 06:00 UTC
+  workflow_dispatch:
+  repository_dispatch:
+    types: [spec-drift]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  refresh-spec:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Fetch the spec at the latest obitrain-api release tag
+        env:
+          GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
+        run: |
+          set -euo pipefail
+          api="https://gitlab.com/api/v4/projects/obitrain%2Fobitrain-api"
+          tag=$(curl -fsS --header "PRIVATE-TOKEN: $GITLAB_TOKEN" \
+            "$api/repository/tags?order_by=version&sort=desc&per_page=1" | jq -r '.[0].name')
+          echo "Fetching openapi.json @ $tag"
+          curl -fsS --header "PRIVATE-TOKEN: $GITLAB_TOKEN" \
+            "$api/repository/files/static%2Fopenapi.json/raw?ref=$tag" -o static/openapi.json
+          echo "API_TAG=$tag" >> "$GITHUB_ENV"
+
+      - run: uv sync --group codegen
+      - run: sh bin/codegen.sh
+
+      - name: Open a PR if the spec drifted
+        uses: peter-evans/create-pull-request@v7
+        with:
+          branch: chore/spec-drift
+          base: master
+          commit-message: 'chore(spec): refresh openapi.json @ ${{ env.API_TAG }} and regenerate models'
+          title: 'chore(spec): refresh vendored spec @ ${{ env.API_TAG }}'
+          body: |
+            Automated refresh of `static/openapi.json` from obitrain-api `${{ env.API_TAG }}`,
+            with `src/obitrain/api/models.py` regenerated via `bin/codegen.sh`.
+
+            Review the diff for new/changed endpoints, then merge to keep `obi schema`
+            and the 4xx hints accurate.
+          labels: spec-drift
+          delete-branch: true

@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [master]
   pull_request:
 
 jobs:
@@ -28,5 +28,5 @@ jobs:
           enable-cache: true
       - run: uv sync --group codegen
       - run: sh bin/codegen.sh
-      - name: Fail if models.py is out of sync with openapi.json
-        run: git diff --exit-code src/obitrain/models.py
+      - name: Fail if generated files are out of sync with the spec
+        run: git diff --exit-code src/obitrain/api/models.py src/obitrain/api/openapi.json
