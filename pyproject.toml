@@ -1,0 +1,79 @@
+[project]
+name = "obitrain"
+version = "0.1.0"
+description = "Public, agent-first CLI for the Obitrain API"
+authors = [{ name = "Julien Brayere", email = "julien.brayere@obitrain.com" }]
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "piou>=0.14.2",
+    "niquests>=3.18.2",
+    "rich>=13.9.4",
+    "pyyaml>=6.0",
+    "filelock>=3.16",
+]
+
+[project.scripts]
+obi = "obitrain:run"
+
+[project.urls]
+Homepage = "https://github.com/obitrain/obi"
+Repository = "https://github.com/obitrain/obi"
+
+[build-system]
+requires = ["uv_build>=0.9.22,<0.10"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "pyright>=1.1.388",
+    "pytest>=8.3.3",
+    "pytest-cov>=6.0.0",
+    "pytest-asyncio>=0.24.0",
+    "ruff>=0.12.1",
+]
+codegen = ["datamodel-code-generator>=0.28"]
+bump = ["commitizen>=4.8.3"]
+docs = [
+    "zensical>=0.0.43",
+]
+
+[tool.pyright]
+include = ["src/obitrain", "tests"]
+exclude = []
+pythonVersion = "3.14"
+pythonPlatform = "Linux"
+
+[tool.pytest.ini_options]
+addopts = "--cov=obitrain -s -q"
+testpaths = ["tests"]
+python_files = "*.py"
+asyncio_mode = "auto"
+
+[tool.coverage.run]
+omit = ["src/obitrain/models.py", "src/obitrain/__main__.py"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py314"
+extend-exclude = ["src/obitrain/models.py"]
+
+[tool.ruff.format]
+quote-style = "single"
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401", "F403", "F405"]
+"conftest.py" = ["F403", "F405"]
+
+[tool.ruff.lint.flake8-quotes]
+docstring-quotes = "double"
+inline-quotes = "single"
+multiline-quotes = "double"
+
+[tool.ruff.lint.flake8-tidy-imports]
+ban-relative-imports = "all"
+
+[tool.commitizen]
+name = "cz_conventional_commits"
+version = "0.1.0"
+version_files = ["pyproject.toml:version"]

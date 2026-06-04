@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+*.egg-info/
+dist/
+build/
+
+# Tooling
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+coverage.xml
+
+# Zensical / docs build
+site/
+
+# Env / secrets
+.env
+*.local

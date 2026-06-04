@@ -1,0 +1,42 @@
+[project]
+site_name = "obi"
+site_description = "Public, agent-first CLI for the Obitrain API."
+site_url = "https://obitrain.github.io/obi/"
+copyright = "Copyright &copy; 2026 Obitrain"
+
+nav = [
+  { "Home" = "index.md" },
+  { "Authentication" = "auth.md" },
+  { "Making requests" = "api.md" },
+  { "Agent quickstart" = "agent-quickstart.md" },
+]
+
+[project.theme]
+language = "en"
+features = [
+  "content.code.copy",
+  "navigation.footer",
+  "navigation.instant",
+  "navigation.sections",
+  "navigation.top",
+  "search.highlight",
+]
+
+[[project.theme.palette]]
+scheme = "default"
+toggle.icon = "lucide/sun"
+toggle.name = "Switch to dark mode"
+
+[[project.theme.palette]]
+scheme = "slate"
+toggle.icon = "lucide/moon"
+toggle.name = "Switch to light mode"
+
+[project.markdown_extensions.admonition]
+[project.markdown_extensions.toc]
+permalink = true
+[project.markdown_extensions.pymdownx.highlight]
+anchor_linenums = true
+[project.markdown_extensions.pymdownx.inlinehilite]
+[project.markdown_extensions.pymdownx.superfences]
+[project.markdown_extensions.pymdownx.details]
