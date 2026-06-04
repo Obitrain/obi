@@ -97,21 +97,44 @@ def show_op(
 
 def _find_operation(ref: str, method: str | None) -> tuple[dict[str, Any], str, str]:
     paths = _spec()['paths']
-    if ref in paths:
-        verbs = {m: op for m, op in paths[ref].items() if m in _METHODS}
+    path = ref if ref in paths else _match_template(ref)
+    if path is not None:
+        verbs = {m: op for m, op in paths[path].items() if m in _METHODS}
         if method:
             if method.lower() not in verbs:
-                raise ObiError(f'no {method.upper()} on {ref}')
-            return verbs[method.lower()], ref, method.lower()
+                raise ObiError(f'no {method.upper()} on {path}')
+            return verbs[method.lower()], path, method.lower()
         if len(verbs) != 1:
-            raise ObiError(f'{ref} has methods {sorted(v.upper() for v in verbs)}; pass -X to choose')
+            raise ObiError(f'{path} has methods {sorted(v.upper() for v in verbs)}; pass -X to choose')
         ((verb, op),) = verbs.items()
-        return op, ref, verb
+        return op, path, verb
     for path, item in paths.items():
         for verb, op in item.items():
             if verb in _METHODS and op.get('operationId') == ref:
                 return op, path, verb
     raise ObiError(f'no operation matching {ref!r}')
+
+
+def _match_template(ref: str) -> str | None:
+    """Match a concrete path like /v1/stats/activity/weekly against spec templates
+    like /v1/stats/activity/{range_type}, preferring the match with most literal segments."""
+    segments = ref.rstrip('/').split('/')
+    best: tuple[int, str] | None = None
+    for path in _spec()['paths']:
+        parts = path.rstrip('/').split('/')
+        if len(parts) != len(segments):
+            continue
+        literals = 0
+        for part, segment in zip(parts, segments):
+            if part.startswith('{') and part.endswith('}'):
+                continue
+            if part != segment:
+                break
+            literals += 1
+        else:
+            if best is None or literals > best[0]:
+                best = (literals, path)
+    return best[1] if best else None
 
 
 def _content_schemas(content: dict[str, Any]) -> dict[str, Any]:

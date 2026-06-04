@@ -35,6 +35,13 @@ def test_show_by_operation_id(run_cli):
     assert op['schemas']['UserGetResp']['properties']  # definitions are inlined, not just names
 
 
+def test_show_matches_concrete_path_against_template(run_cli):
+    _, out, _ = run_cli('schema', 'show', '/v1/stats/activity/weekly')
+    op = json.loads(out)
+    assert op['path'] == '/v1/stats/activity/{range_type}'
+    assert any(p['name'] == 'from_date' and p['required'] for p in op['parameters'])
+
+
 def test_show_ambiguous_method_errors(run_cli):
     code, _, err = run_cli('schema', 'show', '/v1/user')
     assert code == 1
