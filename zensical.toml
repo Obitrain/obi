@@ -2,6 +2,8 @@
 site_name = "obi"
 site_description = "Command-line client for the Obitrain API."
 site_url = "https://obitrain.github.io/obi/"
+repo_url = "https://github.com/Obitrain/obi"
+repo_name = "Obitrain/obi"
 copyright = "Copyright &copy; 2026 Obitrain"
 extra_css = ["stylesheets/extra.css"]
 
@@ -26,6 +28,9 @@ features = [
   "navigation.top",
   "search.highlight",
 ]
+
+[project.theme.icon]
+repo = "fontawesome/brands/github"
 
 [project.theme.font]
 text = "Raleway"
