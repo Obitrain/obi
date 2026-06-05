@@ -40,6 +40,11 @@ codegen:
 drift: codegen
     git diff --exit-code src/obitrain/api/models.py src/obitrain/api/openapi.json
 
+# Bump version (commitizen — updates pyproject.toml and CHANGELOG)
+[group('release')]
+bump *args:
+    uv run --group bump cz bump {{ args }}
+
 # Serve docs with live preview
 [group('docs')]
 docs:
