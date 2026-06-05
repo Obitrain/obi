@@ -3,7 +3,7 @@
   "info": {
     "title": "Obitrain API",
     "description": "API Endpoint for Obitrain",
-    "version": "1.88.0"
+    "version": "1.92.0"
   },
   "paths": {
     "/v1/user/login": {
@@ -671,6 +671,278 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/LogoutResp"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/user/tokens": {
+      "get": {
+        "tags": [
+          "Auth endpoint v2"
+        ],
+        "summary": "List all active API tokens for the current user. Token values are not returned.",
+        "description": "List all active API tokens for the current user. Token values are not returned.",
+        "operationId": "List_all_active_API_tokens_for_the_current_user__Token_values_are_not_returned__v2_user_tokens_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenListResp"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Auth endpoint v2"
+        ],
+        "summary": "Create a new API token for CLI or scripted access. The token value is only returned once.",
+        "description": "Create a new API token for CLI or scripted access. The token value is only returned once.",
+        "operationId": "Create_a_new_API_token_for_CLI_or_scripted_access__The_token_value_is_only_returned_once__v2_user_tokens_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTokenReq"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenCreatedResp"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/user/tokens/{token_id}": {
+      "delete": {
+        "tags": [
+          "Auth endpoint v2"
+        ],
+        "summary": "Revoke an API token by its id.",
+        "description": "Revoke an API token by its id.",
+        "operationId": "Revoke_an_API_token_by_its_id__v2_user_tokens__token_id__delete",
+        "parameters": [
+          {
+            "name": "token_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Token Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StatusResp"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/user/device/code": {
+      "post": {
+        "tags": [
+          "Auth endpoint v2"
+        ],
+        "summary": "Start a device authorization. Returns a device_code for polling and a short",
+        "description": "Start a device authorization. Returns a device_code for polling and a short\nuser_code to approve in the mobile app. Codes expire after a few minutes.",
+        "operationId": "Start_a_device_authorization__Returns_a_device_code_for_polling_and_a_short_v2_user_device_code_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeviceInitReq"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeviceInitResp"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/user/device/token": {
+      "post": {
+        "tags": [
+          "Auth endpoint v2"
+        ],
+        "summary": "Poll a device authorization. Once approved, returns an API token exactly once.",
+        "description": "Poll a device authorization. Once approved, returns an API token exactly once.",
+        "operationId": "Poll_a_device_authorization__Once_approved__returns_an_API_token_exactly_once__v2_user_device_token_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeviceTokenReq"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeviceTokenResp"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/user/device/approve": {
+      "get": {
+        "tags": [
+          "Auth endpoint v2"
+        ],
+        "summary": "Look up a pending device authorization by its user code, so the app can show",
+        "description": "Look up a pending device authorization by its user code, so the app can show\nwhat is being authorized before the user confirms.",
+        "operationId": "Look_up_a_pending_device_authorization_by_its_user_code__so_the_app_can_show_v2_user_device_approve_get",
+        "parameters": [
+          {
+            "name": "user_code",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "User Code"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeviceLookupResp"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Auth endpoint v2"
+        ],
+        "summary": "Approve a device authorization. The polling device then receives an API token",
+        "description": "Approve a device authorization. The polling device then receives an API token\nscoped to the approving user.",
+        "operationId": "Approve_a_device_authorization__The_polling_device_then_receives_an_API_token_v2_user_device_approve_post",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeviceApproveReq"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeviceApproveResp"
                 }
               }
             }
@@ -5846,6 +6118,28 @@
         }
       }
     },
+    "/v1/api/config/sport-metrics": {
+      "get": {
+        "tags": [
+          "Sport Metrics Endpoint"
+        ],
+        "summary": "Per-sport activity-detail metric overrides.",
+        "description": "Per-sport activity-detail metric overrides.\n\nReturns the default ordered list of metric keys plus per-sport overrides\nkeyed by sport_id. The mobile client looks up its session's `sport_id`\nin `overrides` and falls back to `default` when absent.",
+        "operationId": "Per_sport_activity_detail_metric_overrides__v1_api_config_sport_metrics_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SportMetricsResp"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/e2e/get-users": {
       "post": {
         "tags": [
@@ -6605,6 +6899,35 @@
         ],
         "title": "CreateGroupResp"
       },
+      "CreateTokenReq": {
+        "properties": {
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          },
+          "expires_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Expires At"
+          }
+        },
+        "type": "object",
+        "title": "CreateTokenReq"
+      },
       "DeleteSessionsResp": {
         "properties": {
           "status": {
@@ -6625,6 +6948,39 @@
           "ids"
         ],
         "title": "DeleteSessionsResp"
+      },
+      "DeviceApproveReq": {
+        "properties": {
+          "user_code": {
+            "type": "string",
+            "title": "User Code"
+          }
+        },
+        "type": "object",
+        "required": [
+          "user_code"
+        ],
+        "title": "DeviceApproveReq"
+      },
+      "DeviceApproveResp": {
+        "properties": {
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          }
+        },
+        "type": "object",
+        "required": [
+          "description"
+        ],
+        "title": "DeviceApproveResp"
       },
       "DeviceInfos": {
         "properties": {
@@ -6649,13 +7005,131 @@
         ],
         "title": "DeviceInfos"
       },
+      "DeviceInitReq": {
+        "properties": {
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          }
+        },
+        "type": "object",
+        "title": "DeviceInitReq"
+      },
+      "DeviceInitResp": {
+        "properties": {
+          "device_code": {
+            "type": "string",
+            "title": "Device Code"
+          },
+          "user_code": {
+            "type": "string",
+            "title": "User Code"
+          },
+          "expires_in": {
+            "type": "integer",
+            "title": "Expires In"
+          },
+          "interval": {
+            "type": "integer",
+            "title": "Interval"
+          }
+        },
+        "type": "object",
+        "required": [
+          "device_code",
+          "user_code",
+          "expires_in",
+          "interval"
+        ],
+        "title": "DeviceInitResp"
+      },
+      "DeviceLookupResp": {
+        "properties": {
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          },
+          "expires_in": {
+            "type": "integer",
+            "title": "Expires In"
+          }
+        },
+        "type": "object",
+        "required": [
+          "description",
+          "expires_in"
+        ],
+        "title": "DeviceLookupResp"
+      },
+      "DeviceTokenReq": {
+        "properties": {
+          "device_code": {
+            "type": "string",
+            "title": "Device Code"
+          }
+        },
+        "type": "object",
+        "required": [
+          "device_code"
+        ],
+        "title": "DeviceTokenReq"
+      },
+      "DeviceTokenResp": {
+        "properties": {
+          "token": {
+            "type": "string",
+            "title": "Token"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "token",
+          "description",
+          "created_at"
+        ],
+        "title": "DeviceTokenResp"
+      },
       "DistanceSystem": {
         "type": "integer",
         "enum": [
           0,
           1
         ],
-        "title": "DistanceSystem"
+        "title": "DistanceSystem",
+        "x-enum-varnames": [
+          "metric",
+          "imperial"
+        ]
       },
       "EquipmentItem": {
         "properties": {
@@ -7387,7 +7861,12 @@
           1,
           2
         ],
-        "title": "GenderType"
+        "title": "GenderType",
+        "x-enum-varnames": [
+          "male",
+          "female",
+          "others"
+        ]
       },
       "GeoBoundaries": {
         "properties": {
@@ -9526,7 +10005,12 @@
           1,
           2
         ],
-        "title": "Objective"
+        "title": "Objective",
+        "x-enum-varnames": [
+          "gain_weigh",
+          "lose_weight",
+          "improve_health"
+        ]
       },
       "PatchMeasurementResp": {
         "properties": {
@@ -10066,7 +10550,12 @@
           1,
           2
         ],
-        "title": "ProfileType"
+        "title": "ProfileType",
+        "x-enum-varnames": [
+          "private",
+          "public",
+          "friends"
+        ]
       },
       "QuotaLimit": {
         "properties": {
@@ -11854,6 +12343,17 @@
             ],
             "title": "Device Name"
           },
+          "sport_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sport Id"
+          },
           "can_edit": {
             "type": "boolean",
             "title": "Can Edit"
@@ -11918,6 +12418,7 @@
           "speed_max",
           "heart_zones",
           "device_name",
+          "sport_id",
           "can_edit",
           "geo",
           "exercises",
@@ -12004,6 +12505,33 @@
         ],
         "title": "SportItem"
       },
+      "SportMetricsResp": {
+        "properties": {
+          "default": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Default"
+          },
+          "overrides": {
+            "additionalProperties": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "type": "object",
+            "title": "Overrides"
+          }
+        },
+        "type": "object",
+        "required": [
+          "default",
+          "overrides"
+        ],
+        "title": "SportMetricsResp"
+      },
       "Stats": {
         "properties": {
           "last": {
@@ -12073,7 +12601,11 @@
           0,
           1
         ],
-        "title": "TemperatureSystem"
+        "title": "TemperatureSystem",
+        "x-enum-varnames": [
+          "celsius",
+          "fahrenheit"
+        ]
       },
       "TemplateExerciseItemPost": {
         "properties": {
@@ -12573,7 +13105,12 @@
           1,
           2
         ],
-        "title": "ThirdPartyStatus"
+        "title": "ThirdPartyStatus",
+        "x-enum-varnames": [
+          "not_connected",
+          "connected",
+          "need_reconnection"
+        ]
       },
       "ThumbnailItem": {
         "properties": {
@@ -12603,13 +13140,126 @@
         ],
         "title": "ThumbnailItem"
       },
+      "TokenCreatedResp": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "token": {
+            "type": "string",
+            "title": "Token"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          },
+          "expires_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Expires At"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "token",
+          "description",
+          "expires_at",
+          "created_at"
+        ],
+        "title": "TokenCreatedResp"
+      },
+      "TokenListResp": {
+        "properties": {
+          "tokens": {
+            "items": {
+              "$ref": "#/components/schemas/TokenResp"
+            },
+            "type": "array",
+            "title": "Tokens"
+          }
+        },
+        "type": "object",
+        "required": [
+          "tokens"
+        ],
+        "title": "TokenListResp"
+      },
+      "TokenResp": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          },
+          "expires_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Expires At"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "description",
+          "expires_at",
+          "created_at"
+        ],
+        "title": "TokenResp"
+      },
       "TrainingStatus": {
         "type": "integer",
         "enum": [
           0,
           1
         ],
-        "title": "TrainingStatus"
+        "title": "TrainingStatus",
+        "x-enum-varnames": [
+          "to_do",
+          "done"
+        ]
       },
       "TrainingTemplateGETModel": {
         "properties": {
@@ -13131,7 +13781,12 @@
           1,
           2
         ],
-        "title": "VisibilityType"
+        "title": "VisibilityType",
+        "x-enum-varnames": [
+          "private",
+          "public",
+          "friends"
+        ]
       },
       "WeightSystem": {
         "type": "integer",
@@ -13139,7 +13794,11 @@
           0,
           1
         ],
-        "title": "WeightSystem"
+        "title": "WeightSystem",
+        "x-enum-varnames": [
+          "kilogram",
+          "pound"
+        ]
       },
       "WithingsAuthUrlResp": {
         "properties": {
@@ -13588,6 +14247,10 @@
     },
     {
       "name": "Templates endpoint",
+      "description": ""
+    },
+    {
+      "name": "Sport Metrics Endpoint",
       "description": ""
     },
     {

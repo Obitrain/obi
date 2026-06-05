@@ -1,18 +1,20 @@
 #!/usr/bin/env sh
 set -eu
 
-# DESCRIPTION: Regenerate src/obitrain/models.py (TypedDicts) from the vendored openapi.json.
+# DESCRIPTION: Regenerate src/obitrain/api/models.py (TypedDicts) from static/openapi.json.
 # USAGE: sh bin/codegen.sh
 # EXAMPLES:
-#   sh bin/codegen.sh && git diff --exit-code src/obitrain/models.py
+#   sh bin/codegen.sh && git diff --exit-code src/obitrain/api/models.py
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 
+cp static/openapi.json src/obitrain/api/openapi.json
+
 uv run --group codegen datamodel-codegen \
-  --input src/obitrain/openapi.json \
+  --input static/openapi.json \
   --input-file-type openapi \
-  --output src/obitrain/models.py \
+  --output src/obitrain/api/models.py \
   --output-model-type typing.TypedDict \
   --target-python-version 3.14 \
   --use-standard-collections \

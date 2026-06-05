@@ -434,7 +434,6 @@ dependencies = [
     { name = "niquests" },
     { name = "piou" },
     { name = "pyyaml" },
-    { name = "rich" },
 ]
 
 [package.dev-dependencies]
@@ -459,9 +458,8 @@ docs = [
 requires-dist = [
     { name = "filelock", specifier = ">=3.16" },
     { name = "niquests", specifier = ">=3.18.2" },
-    { name = "piou", specifier = ">=0.14.2" },
+    { name = "piou", specifier = "==0.35.2" },
     { name = "pyyaml", specifier = ">=6.0" },
-    { name = "rich", specifier = ">=13.9.4" },
 ]
 
 [package.metadata.requires-dev]
@@ -496,15 +494,15 @@ wheels = [
 
 [[package]]
 name = "piou"
-version = "0.34.1"
+version = "0.35.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "rich" },
     { name = "typing-extensions" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/91/7f/c811767cbdc8e9dcabb2a1f51364dec230ee352e053fbe445902e923aaa2/piou-0.34.1.tar.gz", hash = "sha256:1b763e7f05e236c8cc5d9f453765a46b5e4f3057b2ddb96d4f5de11bc916d2e3", size = 1626534, upload-time = "2026-05-02T19:57:18.328Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/76/cc/2c54bacbdd4cca56fc22e9c6ab08987526dcf63d6ac5d1764c45e57e10dd/piou-0.35.2.tar.gz", hash = "sha256:bfedb9f08574f4f06fe221809d345940a26043bca7faa2bb3024611c61d95f13", size = 1647463, upload-time = "2026-06-04T20:02:00.579Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/a7/a2/0fd4224ae3b04d5594113e2e9f1020fb3ec07c0cec8cc4dd723c60178d84/piou-0.34.1-py3-none-any.whl", hash = "sha256:313cd36a7417422ead14036c1fcb7c58f44e988425c7aca62f9bdf042a311aab", size = 54913, upload-time = "2026-05-02T19:57:16.162Z" },
+    { url = "https://files.pythonhosted.org/packages/bc/06/41b05685f229c328f7c5ef35879fd54c9d68baa7f8bbe360a4bbbe85af9a/piou-0.35.2-py3-none-any.whl", hash = "sha256:34a95558d25c7db2b62cc014cc9c5c718f4a5583372aad5abfa5f6f504d2cb9d", size = 55275, upload-time = "2026-06-04T20:02:01.861Z" },
 ]
 
 [[package]]

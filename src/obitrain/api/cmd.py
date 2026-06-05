@@ -10,7 +10,7 @@ from obitrain.client import ObiClient, read_response
 from obitrain.config import Config
 from obitrain.errors import EXIT_AUTH, EXIT_CLIENT, EXIT_OK, EXIT_SERVER, ObiError
 from obitrain.options import ConfigArg, OutputOpt
-from obitrain.output import OutputFormat, render, render_error
+from obitrain.output import OutputFormat, agent_mode, render, render_error
 
 
 def api_cmd(
@@ -57,7 +57,7 @@ async def _run(
         )
         return EXIT_OK
 
-    async with ObiClient(config.base_url, config.creds, config.store) as client:
+    async with ObiClient(config.base_url, config.creds) as client:
         resp = await client.request(
             resolved_method,
             _target(path),
@@ -69,6 +69,10 @@ async def _run(
         status, payload, request_id = read_response(resp)
         retry_after = resp.headers.get('retry-after')
 
+    if status < 400 and output == 'pretty' and not agent_mode():
+        from obitrain.api.schema import annotate_enums
+
+        payload = annotate_enums(payload, resolved_method, path)
     _render_payload(payload, output)
     if status < 400:
         return EXIT_OK
@@ -76,6 +80,10 @@ async def _run(
     if status == 401:
         render_error('auth_required', detail='not authenticated; run `obi auth login`', **fields)
         return EXIT_AUTH
+    if status in (404, 405, 422):
+        from obitrain.api.schema import hint_for
+
+        fields['hint'] = hint_for(resolved_method, path, status)
     render_error('http_error', retry_after=retry_after, **fields)
     return EXIT_SERVER if status >= 500 else EXIT_CLIENT
 

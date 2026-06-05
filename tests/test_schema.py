@@ -1,5 +1,7 @@
 import json
 
+import pytest
+
 
 def test_list_all_operations(run_cli):
     code, out, _ = run_cli('schema', 'list')
@@ -12,7 +14,21 @@ def test_list_all_operations(run_cli):
 def test_list_grep_filters(run_cli):
     _, out, _ = run_cli('schema', 'list', '--grep', 'activities')
     ops = json.loads(out)
-    assert ops and all('activities' in o['path'] for o in ops)
+    assert ops and any('activities' in o['path'] for o in ops)
+
+
+@pytest.mark.parametrize(
+    ('needle', 'expected_path'),
+    [
+        pytest.param('distance', '/v1/stats/activity/{range_type}', id='schema-field-name'),
+        pytest.param('weekly', '/v1/stats/activity/{range_type}', id='param-enum-value'),
+        pytest.param('user stats', '/v1/stats/activity/{range_type}', id='summary-text'),
+        pytest.param('sportitem', '/v1/stats/activity/{range_type}', id='schema-name'),
+    ],
+)
+def test_list_grep_searches_beyond_path(run_cli, needle, expected_path):
+    _, out, _ = run_cli('schema', 'list', '--grep', needle)
+    assert expected_path in {o['path'] for o in json.loads(out)}
 
 
 def test_list_tag_filters(run_cli):
@@ -32,7 +48,35 @@ def test_show_by_operation_id(run_cli):
     op = json.loads(out)
     assert op['path'] == '/v1/user'
     assert op['method'] == 'GET'
-    assert 'UserGetResp' in op['schemas']
+    assert op['schemas']['UserGetResp']['properties']  # definitions are inlined, not just names
+
+
+def test_show_matches_concrete_path_against_template(run_cli):
+    _, out, _ = run_cli('schema', 'show', '/v1/stats/activity/weekly')
+    op = json.loads(out)
+    assert op['path'] == '/v1/stats/activity/{range_type}'
+    assert any(p['name'] == 'from_date' and p['required'] for p in op['parameters'])
+
+
+def test_annotate_enums_labels_response_fields():
+    from obitrain.api.schema import annotate_enums
+
+    payload = {
+        'user': {'visibility': 2, 'gender': 0, 'quotas': {'exercises': {'current': 217}}, 'verified': True},
+    }
+    annotated = annotate_enums(payload, 'GET', '/v1/user')
+
+    assert annotated['user']['visibility'] == 'friends (2)'
+    assert annotated['user']['gender'] == 'male (0)'  # anyOf [GenderType, null]
+    assert annotated['user']['quotas']['exercises']['current'] == 217  # untouched
+    assert annotated['user']['verified'] is True  # bools never relabeled
+
+
+def test_annotate_enums_unknown_path_is_noop():
+    from obitrain.api.schema import annotate_enums
+
+    payload = {'visibility': 2}
+    assert annotate_enums(payload, 'GET', '/v1/not-an-endpoint') == payload
 
 
 def test_show_ambiguous_method_errors(run_cli):

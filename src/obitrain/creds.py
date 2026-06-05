@@ -12,17 +12,9 @@ _PROFILE_RE = re.compile(r'^[A-Za-z0-9._-]+$')
 
 @dataclass
 class Credentials:
-    """The persisted auth state for one profile.
-
-    There is intentionally no access-token expiry field: the Obitrain login/refresh response carries
-    only `refresh_expires_at`, so the client refreshes reactively on 401 (and proactively when the
-    access token is a decodable JWT). `base_url` records the host that minted these tokens so we never
-    send a refresh token to a different environment.
-    """
+    """The persisted auth state for one profile. `base_url` records which environment the token belongs to."""
 
     access_token: str | None = None
-    refresh_token: str | None = None
-    refresh_expires_at: str | None = None
     base_url: str | None = None
 
     @property

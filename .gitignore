@@ -19,3 +19,5 @@ site/
 # Env / secrets
 .env
 *.local
+.idea/
+.playwright-mcp/

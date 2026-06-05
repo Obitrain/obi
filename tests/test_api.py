@@ -10,7 +10,7 @@ BASE = 'https://api.test'
 
 @pytest.fixture
 def logged_in(store):
-    store.save(Credentials(access_token='tok', refresh_token='r1', base_url=BASE))
+    store.save(Credentials(access_token='tok', base_url=BASE))
     return store
 
 
@@ -71,15 +71,36 @@ def test_error_status_maps_to_exit_code(stub, logged_in, run_cli, status, expect
     assert json.loads(err)['error'] == 'http_error'
 
 
-def test_unauthorized_with_ephemeral_token_does_not_refresh(stub, cfg_dir, run_cli):
-    # An ephemeral OBI_TOKEN has no refresh token, so a 401 is final and surfaced directly.
+@pytest.mark.parametrize(
+    ('path', 'method', 'status', 'expected_hint'),
+    [
+        pytest.param(
+            '/v1/stats/activity/weekly',
+            'GET',
+            422,
+            'required params: range_type (path, enum: daily|weekly|monthly), from_date (query, date), '
+            "to_date (query, date); see `obi schema show '/v1/stats/activity/{range_type}'`",
+            id='422-required-params',
+        ),
+        pytest.param('/v1/nope', 'GET', 404, 'path not in the API spec; try `obi schema list --grep nope`', id='404'),
+        pytest.param('/v1/user', 'DELETE', 405, "/v1/user supports ['GET', 'PATCH']", id='405-methods'),
+    ],
+)
+def test_error_diagnostic_includes_spec_hint(stub, logged_in, run_cli, path, method, status, expected_hint):
+    stub.add(method, path, status=status, json_body={'detail': 'boom'})
+    code, _, err = run_cli('api', path, '-X', method, '--base-url', BASE)
+
+    assert code == 7
+    assert json.loads(err)['hint'] == expected_hint
+
+
+def test_unauthorized_surfaces_auth_error(stub, cfg_dir, run_cli):
     stub.add('GET', '/v1/x', status=401, json_body={'detail': 'nope'})
     code, out, err = run_cli('api', '/v1/x', '--base-url', BASE, '--token', 'ephemeral')
 
     assert code == 4
     assert json.loads(out) == {'detail': 'nope'}
     assert json.loads(err)['error'] == 'auth_required'
-    assert stub.calls('POST', '/v2/user/refresh') == []
 
 
 def test_429_surfaces_retry_after(stub, logged_in, run_cli):

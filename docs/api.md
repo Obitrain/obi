@@ -1,20 +1,20 @@
 # Making requests
 
 `obi api` sends an authenticated request to any path on the Obitrain API, in the spirit of
-`gh api` / `gcx api`. Auth and token refresh are handled for you.
+`gh api` / `gcx api`. Bearer authentication is added for you.
 
 ```text
-obi api <PATH> [-X METHOD] [-d DATA] [-q k=v ...] [-H k:v ...] [-o FORMAT] [-n]
+obi api <PATH> [-X METHOD] [-d DATA] [-q k=v ...] [-H k:v ...] [-o FORMAT] [--json] [-n]
 ```
 
 ## Examples
 
 ```bash
 obi api /v1/activities -q size=1                 # GET with a query param
-obi api /v1/training/sessions -q limit=10 offset=0
-obi api /v2/token/generate -d '{"scope":"read"}' # -d implies POST
+obi api /v1/training/sessions -q limit=10 from_offset=0
+obi api /v1/user -X PATCH -d '{"lang":"fr"}'     # JSON body
 obi api /v1/user -X PATCH -d @patch.json         # body from a file
-echo '{"x":1}' | obi api /v1/thing -X POST -d @- # body from stdin
+printf '%s\n' '{"lang":"fr"}' | obi api /v1/user -X PATCH -d @-
 obi api /v1/user -o yaml                          # YAML output
 obi api /v1/activities -n                         # dry run: print the request, send nothing
 ```
@@ -27,8 +27,12 @@ obi api /v1/activities -n                         # dry run: print the request, 
 | `-d, --data` | Request body. A leading `@` reads a file; `@-` or `-` reads stdin. Parsed as JSON when possible. |
 | `-q, --query` | Query parameters as `k=v` (space-separate several: `-q a=1 b=2`). Repeated keys become a list. |
 | `-H, --header` | Extra headers as `k:v` (space-separate several). Merged over the bearer header. |
-| `-o, --output` | `json` (default), `pretty`, `raw`, or `yaml`. |
+| `-o, --output` | `pretty` (default), `json`, `raw`, or `yaml`. Pretty output falls back to JSON off-TTY. |
+| `--json` | Shorthand for `-o json`. |
 | `-n, --dry-run` | Print the resolved request (token redacted) without sending it. |
+| `--profile` | Use a named credential profile. |
+| `--token` | Use an ephemeral API token without persisting it. |
+| `--base-url` | Override the API base URL. |
 
 `<PATH>` may be a path (`/v1/...`) or an absolute `https://...` URL.
 
@@ -45,7 +49,10 @@ and a one-line diagnostic JSON is written to **stderr**, e.g.:
 |------|---------|
 | `0` | Success (2xx). |
 | `1` | Usage / argument error. |
-| `4` | Authentication required or refresh failed. |
+| `4` | Authentication required or failed. |
 | `5` | Network error (connection, timeout). |
 | `6` | Server error (5xx). |
 | `7` | Other client error (4xx, including 429 — `Retry-After` is surfaced in the diagnostic). |
+
+Use `obi schema show <PATH>` to inspect the expected parameters and payload before making a
+request. See [Discovering the API](schema.md).

@@ -1,0 +1,51 @@
+name: Spec drift
+
+# Refreshes the vendored OpenAPI spec from the latest obitrain-api release tag and opens a
+# PR when it drifted. Runs weekly, on demand (workflow_dispatch), or triggered from outside
+# (repository_dispatch type "spec-drift", e.g. by the obitrain-api release pipeline).
+#
+# Requires the OBITRAIN_API_TOKEN secret: a GitLab token with read_api on obitrain/obitrain-api.
+
+on:
+  schedule:
+    - cron: '0 6 * * 1' # Mondays 06:00 UTC
+  workflow_dispatch:
+  repository_dispatch:
+    types: [spec-drift]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  refresh-spec:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+      - uses: astral-sh/setup-uv@d4b2f3b6ecc6e67c4457f6d3e41ec42d3d0fcb86 # v5.4.2
+        with:
+          enable-cache: true
+
+      - name: Fetch the spec at the latest obitrain-api release tag
+        env:
+          GITLAB_TOKEN: ${{ secrets.OBITRAIN_API_TOKEN }}
+        run: bin/fetch-spec.sh
+
+      - run: uv sync --group codegen
+      - run: sh bin/codegen.sh
+
+      - name: Open a PR if the spec drifted
+        uses: peter-evans/create-pull-request@22a9089034f40e5a961c8808d113e2c98fb63676 # v7.0.9
+        with:
+          branch: chore/spec-drift
+          base: master
+          commit-message: 'chore(spec): refresh openapi.json @ ${{ env.API_TAG }} and regenerate models'
+          title: 'chore(spec): refresh vendored spec @ ${{ env.API_TAG }}'
+          body: |
+            Automated refresh of `static/openapi.json` from obitrain-api `${{ env.API_TAG }}`,
+            with `src/obitrain/api/models.py` regenerated via `bin/codegen.sh`.
+
+            Review the diff for new/changed endpoints, then merge to keep `obi schema`
+            and the 4xx hints accurate.
+          labels: spec-drift
+          delete-branch: true
