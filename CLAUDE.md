@@ -1,19 +1,22 @@
 # obi — Obitrain API CLI
 
-Public, agent-first CLI (`obi`, package `obitrain`) wrapping the Obitrain HTTP API. Auth + a generic
-`obi api` passthrough; not per-endpoint commands.
+Public CLI (`obi`, PyPI package `obitrain`) wrapping the Obitrain HTTP API. It supports interactive,
+scripted, and agent use through authentication, offline schema discovery, and a generic `obi api`
+passthrough rather than per-endpoint commands.
 
 ## Layout
 
-- `src/obitrain/client.py` — async `ObiClient` over `niquests.AsyncSession`; bearer injection,
-  proactive (JWT `exp`) + reactive (401) single-flight refresh, in-process + `filelock` locking.
-- `src/obitrain/auth.py` — `obi auth` group (login/social/register/refresh/logout/status/whoami/token/profiles).
+- `src/obitrain/client.py` — async `ObiClient` over `niquests.AsyncSession`; bearer injection.
+- `src/obitrain/auth.py` — `obi auth` group (login/set/clear/status/whoami/token/profiles).
 - `src/obitrain/api/cmd.py` — generic `obi api <PATH>` (`-X/-d/-q/-H/-o/-n`).
-- `src/obitrain/api/schema.py` — `obi schema` discovery; reads `static/openapi.json` (dev-only, not packaged).
+- `src/obitrain/api/schema.py` — `obi schema` discovery; reads the packaged `src/obitrain/api/openapi.json`.
 - `src/obitrain/api/models.py` — **generated** TypedDicts (do not edit; `sh bin/codegen.sh`).
 - `src/obitrain/{config,creds,output,errors,runner,options}.py` — config resolution, 0600 per-profile
   credential store, output rendering, error/exit-code mapping, command dispatch helpers, shared piou options.
-- `static/openapi.json` — vendored spec; source of truth for codegen and `obi schema` (not shipped in the wheel).
+- `src/obitrain/quickstart.md` — packaged agent guide printed by `obi quickstart`; linked from
+  `docs/agent-quickstart.md`.
+- `static/openapi.json` — vendored source of truth; `bin/codegen.sh` copies it into the package and
+  regenerates `src/obitrain/api/models.py`.
 
 ## Conventions
 

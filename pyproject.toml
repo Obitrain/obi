@@ -1,7 +1,7 @@
 [project]
 name = "obitrain"
 version = "0.1.0"
-description = "Public, agent-first CLI for the Obitrain API"
+description = "Command-line client for the Obitrain API"
 authors = [{ name = "Julien Brayere", email = "julien.brayere@obitrain.com" }]
 readme = "README.md"
 requires-python = ">=3.14"
@@ -42,6 +42,8 @@ include = ["src/obitrain", "tests"]
 exclude = []
 pythonVersion = "3.14"
 pythonPlatform = "Linux"
+venvPath = "."
+venv = ".venv"
 
 [tool.pytest.ini_options]
 addopts = "--cov=obitrain -s -q"

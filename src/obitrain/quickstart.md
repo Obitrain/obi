@@ -1,77 +1,102 @@
 # Agent quickstart
 
-`obi` is designed to be driven by AI agents and scripts. This page is the contract you can rely on.
+`obi` was designed to work reliably in AI-agent and automation workflows. This page documents the
+machine-facing contract an agent can depend on.
+
+For an offline copy of this guide, run:
+
+```bash
+obi quickstart
+```
+
+Use `obi --help-json` to inspect the complete command tree and option metadata as JSON.
 
 ## 1. Discover the API
 
+Search the bundled OpenAPI contract before constructing a request:
+
 ```bash
-obi schema tags                         # tags and operation counts
-obi schema list --grep session          # find operations by path / id
-obi schema list --tag "Session endpoint"
-obi schema show /v1/training/sessions -X GET
-obi schema show /v1/stats/activity/weekly   # concrete paths resolve to their template
+obi schema tags --json
+obi schema list --grep session --json
+obi schema list --tag "Session endpoint" --json
+obi schema show /v1/training/sessions -X GET --json
+obi schema show /v1/stats/activity/weekly --json
 ```
 
-`obi schema show` prints an operation's parameters (with types), request-body schema, response
-schemas, and the full definitions of every referenced component schema. The spec is bundled in the
-package, so discovery needs no network.
+`schema show` returns the operation's parameters, request-body schema, response schemas, and all
+referenced component definitions. Concrete paths resolve to their OpenAPI path template.
 
-## 2. Authenticate
+## 2. Authenticate without persistence
 
-For non-interactive environments, pass a token via the environment — it is ephemeral and never
-written to disk:
+For an agent or CI job, prefer an ephemeral token:
 
 ```bash
 export OBI_TOKEN="<api token>"
-export OBI_BASE_URL="https://api.obitrain.com"   # optional override
-obi api /v1/user
+export OBI_BASE_URL="https://api.obitrain.com"   # optional
+obi api /v1/user --json
 ```
 
-Interactively, `obi auth login` runs a device-code flow: it prints a short code, the user approves
-it in the Obitrain app (Account → Link a device), and a long-lived API token is stored in the
-active profile. `obi auth set <token>` stores a token generated from the Account page instead.
+`OBI_TOKEN` is used for the current process and is not written to disk. A user can instead run
+`obi auth login` and approve the device code in the Obitrain app, or store an existing token with
+`obi auth set <token>`.
 
 ## 3. Call the API
 
 ```bash
-obi api /v1/activities -q size=5
+obi api /v1/activities -q size=5 --json
 ```
 
-- **Output is plain JSON for you.** The human default is a highlighted view, but it falls back to
-  plain JSON when an agent environment is detected (`CLAUDECODE`, `CLAUDE_CODE`, `CURSOR_AGENT`,
-  `GITHUB_COPILOT`, `AMAZON_Q`, `OBI_AGENT_MODE`), when `NO_COLOR` is set, or when stdout is not a
-  TTY. Pass `--json` to force it explicitly.
-- **Successful bodies → stdout.** Parse them directly.
-- **Errors → stderr** as one-line JSON, with a deterministic exit code.
+Use `--json` explicitly even though `obi` automatically selects plain JSON when stdout is not a
+TTY or a supported agent environment is detected.
+
+- Successful response bodies are written to stdout.
+- HTTP error response bodies are still written to stdout.
+- Diagnostics are written to stderr as one-line JSON.
+
+Keep stdout and stderr separate when invoking the command so both payloads remain parseable.
 
 ## 4. Branch on exit codes
 
-| Exit | Do |
-|------|----|
-| `0` | Parse stdout as the result. |
-| `4` | Re-authenticate (`obi auth login`) or refresh the `OBI_TOKEN`. |
-| `5` | Transient network issue — retry with backoff. |
-| `6` | Server error — retry later. |
-| `7` | Client error — inspect the stderr JSON (`status`, `hint`, `retry_after`) and fix the request. |
+| Exit | Meaning | Agent action |
+|------|---------|--------------|
+| `0` | Success | Parse stdout as the result. |
+| `1` | Usage error | Fix the command arguments. |
+| `4` | Authentication error | Obtain a valid token or ask the user to authenticate. |
+| `5` | Network error | Retry with backoff. |
+| `6` | Server error (5xx) | Retry later. |
+| `7` | Client error (4xx) | Inspect the stderr diagnostic and fix the request. |
 
-## 5. Repair from the `hint` field
+For `429`, the diagnostic includes `retry_after` when the server provides it.
 
-On `404`, `405` and `422` the stderr diagnostic includes a `hint` built from the bundled spec —
-usually enough to fix the request without further discovery:
+## 5. Repair invalid requests
 
-```bash
-$ obi api /v1/stats/activity/weekly
-{"error": "http_error", "status": 422, ..., "hint": "required params: range_type (path, enum:
-daily|weekly|monthly), from_date (query, date), to_date (query, date); see `obi schema show
-'/v1/stats/activity/{range_type}'`"}
+For `404`, `405`, and `422`, the stderr diagnostic can include a `hint` generated from the bundled
+API contract:
 
-$ obi api /v1/stats/activity/weekly -q from_date=2026-01-01 -q to_date=2026-06-01   # repaired
+```json
+{
+  "error": "http_error",
+  "status": 422,
+  "method": "GET",
+  "path": "/v1/stats/activity/weekly",
+  "hint": "required params: ...; see `obi schema show '/v1/stats/activity/{range_type}'`"
+}
 ```
 
-## 6. Dry-run before mutating
+On exit `7`, read `status` and `hint`, inspect the suggested operation with `obi schema show`, and
+retry only after correcting the request.
+
+## 6. Dry-run mutations
 
 ```bash
-obi api /v1/user -X PATCH -d '{"lang":"fr"}' -n
+obi api /v1/user -X PATCH -d '{"lang":"fr"}' -n --json
 ```
 
-Prints the exact request (with the token redacted) so an agent can confirm before sending.
+Dry-run prints the resolved method, URL, query, headers, and body without sending the request. The
+authorization token is redacted.
+
+The recommended loop is:
+
+```text
+schema list -> schema show -> api --dry-run -> api -> inspect exit code and diagnostic
+```

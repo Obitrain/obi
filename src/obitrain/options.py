@@ -5,7 +5,7 @@ from obitrain.output import OutputFormat
 
 ProfileOpt = Option(None, '--profile', help='Credential profile to use (default: "default").')
 BaseUrlOpt = Option(None, '--base-url', help='API base URL; overrides env and the stored value.')
-TokenOpt = Option(None, '--token', help='Bearer access token to use (ephemeral; disables refresh).')
+TokenOpt = Option(None, '--token', help='Bearer API token to use without persisting it.')
 
 
 def _resolve_output(

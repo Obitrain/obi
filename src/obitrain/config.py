@@ -27,7 +27,7 @@ def resolve_config(profile: str | None = None, base_url: str | None = None, toke
     """Builds a Config with per-field precedence: flag > env > stored creds > default.
 
     A token from `--token` or OBI_TOKEN wins over stored creds and yields an ephemeral, store-less
-    config (no persistence, no refresh).
+    config.
     """
     prof = validate_profile(profile or os.environ.get('OBI_PROFILE') or 'default')
     store = CredentialStore(profile_path(prof))

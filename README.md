@@ -1,7 +1,7 @@
 # obi
 
 Command-line client for the **Obitrain API** — one generic, scriptable interface to every
-endpoint, with first-class support for AI agents.
+endpoint, for interactive use and automation.
 
 Instead of wrapping each endpoint in its own subcommand, `obi` gives you three primitives:
 
@@ -16,7 +16,7 @@ uv tool install obitrain      # exposes the `obi` binary
 uvx --from obitrain obi --help
 ```
 
-## Getting started
+## User quickstart
 
 ```bash
 obi auth login
@@ -35,6 +35,9 @@ obi api /v1/training/sessions -q limit=5          # last sessions
 obi api /v1/user -X PATCH -d '{"lang": "fr"}'     # update a field
 obi api /v1/training/session -d @session.json     # body from a file (implies POST)
 ```
+
+Continue with the [user quickstart](https://obitrain.github.io/obi/user-quickstart/) or see the
+[full documentation](https://obitrain.github.io/obi/).
 
 ## Authentication
 
@@ -88,9 +91,9 @@ obi schema show /v1/training/sessions -X GET # params, body & response schemas, 
 obi schema show /v1/stats/activity/weekly    # concrete paths resolve to their {template}
 ```
 
-## For AI agents
+## Agent quickstart
 
-`obi` is built to be driven by LLMs. The contract:
+`obi` was also designed for reliable use by AI agents. The machine-facing contract includes:
 
 - **Self-documenting binary** — `obi quickstart` prints the full agent guide (discovery → auth →
   calls → error repair) to stdout; `obi --help-json` gives the machine-readable command tree.
@@ -115,7 +118,8 @@ obi schema show /v1/stats/activity/weekly    # concrete paths resolve to their {
 The recommended loop: `obi schema list --grep …` → `obi schema show <path>` → `obi api … -n`
 (optional dry-run) → `obi api …` → on exit 7, read `hint` and retry.
 
-Repo-level agent instructions live in [`AGENTS.md`](AGENTS.md) (a symlink to `CLAUDE.md`).
+See the [agent quickstart](https://obitrain.github.io/obi/agent-quickstart/) for the complete
+workflow.
 
 ## Development
 

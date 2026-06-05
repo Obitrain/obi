@@ -16,7 +16,7 @@ class ObiError(Exception):
 
 
 class AuthError(ObiError):
-    """Authentication is required or token refresh failed."""
+    """Authentication is required or failed."""
 
     exit_code = EXIT_AUTH
 
