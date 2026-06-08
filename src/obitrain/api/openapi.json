@@ -3,7 +3,7 @@
   "info": {
     "title": "Obitrain API",
     "description": "API Endpoint for Obitrain",
-    "version": "1.92.0"
+    "version": "1.93.0"
   },
   "paths": {
     "/v1/user/login": {
