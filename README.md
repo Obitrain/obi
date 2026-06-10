@@ -118,8 +118,18 @@ obi schema show /v1/stats/activity/weekly    # concrete paths resolve to their {
 The recommended loop: `obi schema list --grep …` → `obi schema show <path>` → `obi api … -n`
 (optional dry-run) → `obi api …` → on exit 7, read `hint` and retry.
 
+**Works with coding agents.** Any agent that can run a shell can drive `obi` — give it a token via
+`OBI_TOKEN` and tell it to run `obi quickstart`. Claude Code is auto-detected (`CLAUDECODE`); for
+OpenAI Codex (`AGENTS.md`) and Mistral Vibe, set `OBI_AGENT_MODE=1` to force JSON:
+
+```bash
+OBI_TOKEN="<api token>" claude                                   # auto-detected
+OBI_AGENT_MODE=1 OBI_TOKEN="<api token>" codex exec "use obi to fetch /v1/user"
+OBI_AGENT_MODE=1 OBI_TOKEN="<api token>" vibe -p "use obi to fetch /v1/user" --enabled-tools "bash*"
+```
+
 See the [agent quickstart](https://obitrain.github.io/obi/agent-quickstart/) for the complete
-workflow.
+workflow, including per-tool setup.
 
 ## Development
 
