@@ -434,6 +434,7 @@ dependencies = [
     { name = "niquests" },
     { name = "piou" },
     { name = "pyyaml" },
+    { name = "qrcode" },
 ]
 
 [package.dev-dependencies]
@@ -458,8 +459,9 @@ docs = [
 requires-dist = [
     { name = "filelock", specifier = ">=3.16" },
     { name = "niquests", specifier = ">=3.18.2" },
-    { name = "piou", specifier = "==0.35.2" },
+    { name = "piou", specifier = ">=0.35.2" },
     { name = "pyyaml", specifier = ">=6.0" },
+    { name = "qrcode", specifier = ">=8.0" },
 ]
 
 [package.metadata.requires-dev]
@@ -753,6 +755,18 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/5e/a4/e97017e2d3c2e84df03adda3e8a767a6631f538aed018552d2f313596945/qh3-1.9.1-cp37-abi3-win32.whl", hash = "sha256:0d3abdac744a3390c0774ba0841638417e237c4d9a08ac1a62aad9ebce4aeb1e", size = 1871458, upload-time = "2026-06-01T11:10:58.253Z" },
     { url = "https://files.pythonhosted.org/packages/b6/b7/1034b12dab07bd33842df3bc5f318e3b6dc430355a4adc491796c019e57d/qh3-1.9.1-cp37-abi3-win_amd64.whl", hash = "sha256:ceac076d1b8025e96fd77cf3d80cf63faed516d7a55c91577076595d42c26e5a", size = 2135775, upload-time = "2026-06-01T11:10:59.994Z" },
     { url = "https://files.pythonhosted.org/packages/11/00/e56189a7d37d3d71175f216d96244e33715b5a5d8c475de177111174166c/qh3-1.9.1-cp37-abi3-win_arm64.whl", hash = "sha256:f09bd4aa8da38fcd3a237b2a7b776539dce9104b2f82c681648d6a05f0b8c9be", size = 1972727, upload-time = "2026-06-01T11:11:01.648Z" },
+]
+
+[[package]]
+name = "qrcode"
+version = "8.2"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "colorama", marker = "sys_platform == 'win32'" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/8f/b2/7fc2931bfae0af02d5f53b174e9cf701adbb35f39d69c2af63d4a39f81a9/qrcode-8.2.tar.gz", hash = "sha256:35c3f2a4172b33136ab9f6b3ef1c00260dd2f66f858f24d88418a015f446506c", size = 43317, upload-time = "2025-05-01T15:44:24.726Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/dd/b8/d2d6d731733f51684bbf76bf34dab3b70a9148e8f2cef2bb544fccec681a/qrcode-8.2-py3-none-any.whl", hash = "sha256:16e64e0716c14960108e85d853062c9e8bba5ca8252c0b4d0231b9df4060ff4f", size = 45986, upload-time = "2025-05-01T15:44:22.781Z" },
 ]
 
 [[package]]

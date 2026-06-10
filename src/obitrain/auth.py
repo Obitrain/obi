@@ -15,6 +15,7 @@ from obitrain.options import ConfigArg, OutputOpt
 from obitrain.output import (
     OutputFormat,
     agent_mode,
+    device_link_qr,
     render,
     render_auth_status,
     render_confirm,
@@ -28,6 +29,9 @@ auth_group = CommandGroup('auth', help='Authenticate with the Obitrain API.')
 _WHOAMI_PATH = '/v1/user'
 _DEVICE_CODE_PATH = '/v2/user/device/code'
 _DEVICE_TOKEN_PATH = '/v2/user/device/token'
+
+# Custom scheme; flip to https://app.obitrain.com/link-device once the app ships universal-link assets.
+_LINK_DEVICE_URL = 'obitrain://link-device'
 
 
 @auth_group.command('login', help='Log in by approving a device code in the Obitrain app.')
@@ -108,6 +112,12 @@ def _pretty(output: OutputFormat) -> bool:
     return output == 'pretty' and not agent_mode()
 
 
+def _interactive() -> bool:
+    """True for a human at a terminal: stderr is a TTY and stdout is not piped/forced to machine output.
+    Gates terminal-only adornments like the login QR so scripted and agent runs stay clean."""
+    return sys.stderr.isatty() and not agent_mode()
+
+
 def _require_store(config: Config) -> None:
     if config.store is None:
         raise ObiError('this profile uses an ephemeral token (--token/OBI_TOKEN); nothing to persist')
@@ -124,9 +134,17 @@ async def _login(config: Config, output: OutputFormat, description: str | None) 
         if status_code >= 400:
             raise ApiError('device code request failed', status=status_code, body=data, request_id=request_id)
 
+        user_code = data['user_code']
+        qr = device_link_qr(f'{_LINK_DEVICE_URL}?code={user_code}') if _interactive() else None
+        scan_hint = ' (or scan the QR with your phone camera)' if qr else ''
         print(
-            f'Open the Obitrain app on your phone: Account → Link a device, and enter this code:\n\n'
-            f'    {data["user_code"]}\n\n'
+            f'Open the Obitrain app on your phone: Account → Link a device, and enter this code{scan_hint}:\n\n'
+            f'    {user_code}\n',
+            file=sys.stderr,
+        )
+        if qr:
+            print(f'{qr}\n', file=sys.stderr)
+        print(
             f'Waiting for approval (expires in {data["expires_in"] // 60} min, Ctrl-C to cancel)...',
             file=sys.stderr,
         )

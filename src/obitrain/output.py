@@ -1,3 +1,4 @@
+import io
 import json
 import os
 import re
@@ -190,6 +191,22 @@ def _quotas_panel(quotas: dict[str, Any]) -> Panel:
         else:
             rows.append((name, _cell(quota)))
     return _panel(_panel_table(rows), title='Quotas')
+
+
+def device_link_qr(url: str) -> str | None:
+    """Renders `url` as a terminal-scannable QR built from unicode half-blocks, or None if `qrcode`
+    is unavailable. `invert=True` yields dark modules on a light frame, the readable polarity on the
+    dark terminals most developers run."""
+    try:
+        import qrcode
+    except ImportError:
+        return None
+    qr = qrcode.QRCode(border=2)
+    qr.add_data(url)
+    qr.make()
+    buf = io.StringIO()
+    qr.print_ascii(out=buf, invert=True)
+    return buf.getvalue().rstrip('\n')
 
 
 def render_confirm(status: str, *details: str, console: Console | None = None) -> None:

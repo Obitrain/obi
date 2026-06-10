@@ -8,6 +8,7 @@ from rich.console import Console
 from obitrain.options import _resolve_output
 from obitrain.output import (
     agent_mode,
+    device_link_qr,
     render,
     render_auth_status,
     render_confirm,
@@ -277,3 +278,18 @@ def test_agent_mode_from_env(monkeypatch, env, value, expected):
         monkeypatch.delenv(var, raising=False)
     monkeypatch.setenv(env, value)
     assert agent_mode() is expected
+
+
+def test_device_link_qr_renders_block_glyphs():
+    qr = device_link_qr('obitrain://link-device?code=BCDF-2345')
+    assert qr is not None
+    # half-block glyphs only, deterministic for a given payload, no trailing blank line
+    assert '█' in qr
+    assert not qr.endswith('\n')
+    assert qr == device_link_qr('obitrain://link-device?code=BCDF-2345')
+
+
+def test_device_link_qr_distinct_per_code():
+    assert device_link_qr('obitrain://link-device?code=AAAA-1111') != device_link_qr(
+        'obitrain://link-device?code=BBBB-2222'
+    )

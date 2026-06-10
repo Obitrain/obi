@@ -124,6 +124,28 @@ def test_login_saves_token(stub, store, run_cli, no_sleep, poll_responses):
     assert init_body['description'].startswith('obi CLI on ')
     # the unauthenticated initiate request must not carry a bearer header
     assert 'Authorization' not in stub.calls('POST', '/v2/user/device/code')[0].headers
+    # captured (non-TTY) stderr stays plain: no QR adornment
+    assert '█' not in err and 'scan' not in err
+
+
+@pytest.mark.parametrize(
+    ('interactive', 'has_qr'),
+    [
+        pytest.param(True, True, id='tty-shows-qr'),
+        pytest.param(False, False, id='piped-stays-plain'),
+    ],
+)
+def test_login_qr_gated_on_interactive(stub, store, run_cli, no_sleep, monkeypatch, interactive, has_qr):
+    monkeypatch.setattr('obitrain.auth._interactive', lambda: interactive)
+    stub.add('POST', '/v2/user/device/code', status=200, json_body=_DEVICE_INIT)
+    stub.add('POST', '/v2/user/device/token', status=200, json_body=_TOKEN_OK)
+
+    code, _, err = run_cli('auth', 'login', '--base-url', BASE)
+
+    assert code == 0
+    assert ('█' in err) is has_qr
+    assert ('scan the QR' in err) is has_qr
+    assert 'BCDF-2345' in err  # the typed code is always shown
 
 
 def test_login_expired_code_exits_auth(stub, store, run_cli, no_sleep):
