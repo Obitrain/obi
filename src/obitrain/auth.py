@@ -2,10 +2,12 @@ import asyncio
 import socket
 import sys
 import time
+from contextlib import nullcontext
 from typing import Any
 
 import niquests
 from piou import CommandGroup, Option
+from rich.text import Text
 
 from obitrain.client import ObiClient, read_response
 from obitrain.config import Config
@@ -19,6 +21,7 @@ from obitrain.output import (
     render,
     render_auth_status,
     render_confirm,
+    render_login_prompt,
     render_profiles,
     render_whoami,
 )
@@ -135,20 +138,19 @@ async def _login(config: Config, output: OutputFormat, description: str | None) 
             raise ApiError('device code request failed', status=status_code, body=data, request_id=request_id)
 
         user_code = data['user_code']
-        qr = device_link_qr(f'{_LINK_DEVICE_URL}?code={user_code}') if _interactive() else None
-        scan_hint = ' (or scan the QR with your phone camera)' if qr else ''
-        print(
-            f'Open the Obitrain app on your phone: Account → Link a device, and enter this code{scan_hint}:\n\n'
-            f'    {user_code}\n',
-            file=sys.stderr,
-        )
-        if qr:
-            print(f'{qr}\n', file=sys.stderr)
-        print(
-            f'Waiting for approval (expires in {data["expires_in"] // 60} min, Ctrl-C to cancel)...',
-            file=sys.stderr,
-        )
-        token = await _poll_device_token(client, data['device_code'], data['expires_in'], data['interval'])
+        waiting = f'Waiting for approval (expires in {data["expires_in"] // 60} min, Ctrl-C to cancel)...'
+        if _interactive():
+            console = render_login_prompt(user_code, device_link_qr(f'{_LINK_DEVICE_URL}?code={user_code}'))
+            spinner = console.status(Text(waiting, style='dim'))
+        else:
+            print(
+                f'Open the Obitrain app on your phone: Account → Link a device, and enter this code:\n\n'
+                f'    {user_code}\n\n{waiting}',
+                file=sys.stderr,
+            )
+            spinner = nullcontext()
+        with spinner:
+            token = await _poll_device_token(client, data['device_code'], data['expires_in'], data['interval'])
 
     config.store.save(Credentials(access_token=token, base_url=config.base_url))
     if _pretty(output):

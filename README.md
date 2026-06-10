@@ -79,6 +79,7 @@ obi api <path> [-X METHOD] [-q k=v ...] [-d BODY|@file|@-] [-H k:v ...] [-o json
 | `5` | Network error (connection, DNS, timeout) |
 | `6` | Server error (5xx) |
 | `7` | Client error (4xx) |
+| `130` | Cancelled (Ctrl-C) |
 
 ## Discovering the API
 

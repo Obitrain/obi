@@ -39,5 +39,5 @@ uv run --group docs zensical serve   # docs preview
 
 ## Exit codes
 
-`0` ok · `1` usage · `4` auth · `5` network · `6` server (5xx) · `7` client (4xx). Errors emit a
+`0` ok · `1` usage · `4` auth · `5` network · `6` server (5xx) · `7` client (4xx) · `130` cancelled (Ctrl-C). Errors emit a
 one-line JSON diagnostic to stderr; response bodies always go to stdout.

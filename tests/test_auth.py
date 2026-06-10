@@ -148,6 +148,20 @@ def test_login_qr_gated_on_interactive(stub, store, run_cli, no_sleep, monkeypat
     assert 'BCDF-2345' in err  # the typed code is always shown
 
 
+def test_login_interrupt_exits_cancelled(stub, store, run_cli, monkeypatch):
+    async def _interrupt(_delay):
+        raise KeyboardInterrupt
+
+    monkeypatch.setattr(asyncio, 'sleep', _interrupt)
+    stub.add('POST', '/v2/user/device/code', status=200, json_body=_DEVICE_INIT)
+
+    code, _, err = run_cli('auth', 'login', '--base-url', BASE)
+
+    assert code == 130
+    assert json.loads(err.strip().splitlines()[-1])['error'] == 'cancelled'
+    assert not store.path.exists()
+
+
 def test_login_expired_code_exits_auth(stub, store, run_cli, no_sleep):
     stub.add('POST', '/v2/user/device/code', status=200, json_body=_DEVICE_INIT)
     stub.add('POST', '/v2/user/device/token', status=400, json_body={'error_code': 'token_expired', 'reason': 'gone'})
