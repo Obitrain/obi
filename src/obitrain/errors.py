@@ -7,6 +7,7 @@ EXIT_AUTH = 4
 EXIT_NETWORK = 5
 EXIT_SERVER = 6
 EXIT_CLIENT = 7
+EXIT_CANCELLED = 130  # 128 + SIGINT, the shell convention
 
 
 class ObiError(Exception):

@@ -7,11 +7,13 @@ from typing import Any, Literal, TextIO
 
 import yaml
 from rich import box
+from rich.align import Align
 from rich.columns import Columns
 from rich.console import Console, Group
 from rich.json import JSON
 from rich.panel import Panel
 from rich.table import Table
+from rich.text import Text
 
 OutputFormat = Literal['json', 'pretty', 'raw', 'yaml']
 
@@ -209,11 +211,34 @@ def device_link_qr(url: str) -> str | None:
     return buf.getvalue().rstrip('\n')
 
 
+def render_login_prompt(user_code: str, qr: str | None, *, console: Console | None = None) -> Console:
+    """Renders the device-login instructions as a card: app navigation hint, the user code centered
+    and prominent, and the terminal QR when available. Writes to stderr so stdout stays parseable;
+    returns the console so the caller can attach the waiting spinner to the same stream."""
+    console = console or Console(stderr=True)
+    scan_hint = ' (or scan the QR with your phone camera)' if qr else ''
+    body: list[Any] = [
+        f'Open the Obitrain app on your phone: [bold]Account → Link a device[/bold],\nand enter this code{scan_hint}:',
+        '',
+        Align.center(f'[bold cyan]{user_code}[/bold cyan]'),
+    ]
+    if qr:
+        body += ['', Align.center(Text(qr))]
+    console.print(_panel(Group(*body), title='Link a device'))
+    return console
+
+
 def render_confirm(status: str, *details: str, console: Console | None = None) -> None:
     """Prints a one-line green-check confirmation, details dim and dot-separated."""
     console = console or Console()
     parts = [f'[green3]✔[/green3] {status}', *(f'[dim]{d}[/dim]' for d in details)]
     console.print(' [dim]·[/dim] '.join(parts))
+
+
+def render_cancelled(*, console: Console | None = None) -> None:
+    """Prints a one-line cancellation marker to stderr, the human counterpart of render_confirm."""
+    console = console or Console(stderr=True)
+    console.print('[red3]✗[/red3] cancelled')
 
 
 def render_auth_status(info: dict[str, Any], *, console: Console | None = None) -> None:

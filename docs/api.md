@@ -53,6 +53,7 @@ and a one-line diagnostic JSON is written to **stderr**, e.g.:
 | `5` | Network error (connection, timeout). |
 | `6` | Server error (5xx). |
 | `7` | Other client error (4xx, including 429 — `Retry-After` is surfaced in the diagnostic). |
+| `130` | Cancelled (Ctrl-C / SIGINT). |
 
 Use `obi schema show <PATH>` to inspect the expected parameters and payload before making a
 request. See [Discovering the API](schema.md).

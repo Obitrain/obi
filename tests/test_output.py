@@ -13,6 +13,7 @@ from obitrain.output import (
     render_auth_status,
     render_confirm,
     render_error,
+    render_login_prompt,
     render_operation,
     render_profiles,
     render_whoami,
@@ -177,6 +178,22 @@ def test_render_profiles(active, profiles, expected):
     text = _rendered(render_profiles, active, profiles)
     for needle in expected:
         assert needle in text
+
+
+@pytest.mark.parametrize(
+    ('qr', 'expected', 'absent'),
+    [
+        pytest.param('█▀▄ qr ▄▀█', ['scan the QR', '█▀▄ qr ▄▀█'], [], id='with-qr'),
+        pytest.param(None, [], ['scan the QR', '█'], id='without-qr'),
+    ],
+)
+def test_render_login_prompt(qr, expected, absent):
+    text = _rendered(render_login_prompt, 'BCDF-2345', qr)
+    assert 'Link a device' in text and 'BCDF-2345' in text
+    for needle in expected:
+        assert needle in text
+    for needle in absent:
+        assert needle not in text
 
 
 def test_render_confirm():

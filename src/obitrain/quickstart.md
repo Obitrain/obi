@@ -65,6 +65,7 @@ Keep stdout and stderr separate when invoking the command so both payloads remai
 | `5` | Network error | Retry with backoff. |
 | `6` | Server error (5xx) | Retry later. |
 | `7` | Client error (4xx) | Inspect the stderr diagnostic and fix the request. |
+| `130` | Cancelled (Ctrl-C / SIGINT) | Treat as user-aborted; do not retry automatically. |
 
 For `429`, the diagnostic includes `retry_after` when the server provides it.
 

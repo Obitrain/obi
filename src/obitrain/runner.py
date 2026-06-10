@@ -1,12 +1,13 @@
 import asyncio
+import sys
 from collections.abc import Coroutine, Iterator
 from contextlib import contextmanager
 from typing import Any
 
 import niquests
 
-from obitrain.errors import EXIT_NETWORK, ApiError, AuthError, ObiError
-from obitrain.output import render_error
+from obitrain.errors import EXIT_CANCELLED, EXIT_NETWORK, ApiError, AuthError, ObiError
+from obitrain.output import agent_mode, render_cancelled, render_error
 
 
 @contextmanager
@@ -46,5 +47,11 @@ def execute(coro: Coroutine[Any, Any, int]) -> None:
     except ObiError as exc:
         render_error('error', detail=str(exc))
         code = exc.exit_code
+    except KeyboardInterrupt:
+        if sys.stderr.isatty() and not agent_mode():
+            render_cancelled()
+        else:
+            render_error('cancelled')
+        code = EXIT_CANCELLED
     if code:
         raise SystemExit(code)
