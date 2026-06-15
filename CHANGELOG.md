@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.2.0
+
+- **QR code login** — `obi auth login` renders a scannable QR code for the device-link URL,
+  so you can authenticate from a phone without copy-pasting.
+- **Rich login panel** — login flow uses a styled Rich panel with live status and clean Ctrl-C
+  cancellation instead of plain text output.
+- **OpenAPI spec refresh** — bundled spec updated to v1.95.0 with regenerated models.
+- **Docs** — agent driving guide added to README and quickstart.
+- **CI** — actions bumped to Node 24 SHA pins.
+
 ## 0.1.0
 
 Initial release of `obi`, the command-line client for the Obitrain API.
