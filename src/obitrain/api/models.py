@@ -4,10 +4,12 @@
 from typing import Any, Literal, NotRequired, TypedDict
 
 
+
 class APNPostModel(TypedDict):
     token: str
     data: dict[str, Any]
     bundle_id: NotRequired[str]
+
 
 
 class AppleLoginPostHandler(TypedDict):
@@ -15,14 +17,17 @@ class AppleLoginPostHandler(TypedDict):
     lang: NotRequired[str | None]
 
 
+
 class ApplePOSTResp(TypedDict):
     apple_id: str
+
 
 
 class AppleWorkoutType(TypedDict):
     apple_code: int
     name: str
     name_fr: str
+
 
 
 class BaseGroupItem(TypedDict):
@@ -35,12 +40,14 @@ class BaseGroupItem(TypedDict):
     duration: NotRequired[int | None]
 
 
+
 class BodyUploadAFitFileAndCreateASessionForItV1ThirdPartyFitUploadPost(TypedDict):
-    source: Literal["zwift"]
+    source: Literal['zwift']
     md5: str
     path: str
     size: int
     name: NotRequired[str | None]
+
 
 
 class BodyUploadNewMediaV1MediaDataTypeUploadPost(TypedDict):
@@ -56,10 +63,12 @@ class BodyUploadNewMediaV1MediaDataTypeUploadPost(TypedDict):
     id: NotRequired[str | None]
 
 
+
 class CountryItem(TypedDict):
     code_iso_2: str
     code_iso_3: str
     country: str
+
 
 
 class CreateTokenReq(TypedDict):
@@ -67,17 +76,22 @@ class CreateTokenReq(TypedDict):
     expires_at: NotRequired[str | None]
 
 
+
 class DeleteSessionsResp(TypedDict):
     status: str
     ids: list[str]
 
 
+
 class DeviceApproveReq(TypedDict):
     user_code: str
+    expires_at: NotRequired[str | None]
+
 
 
 class DeviceApproveResp(TypedDict):
     description: str | None
+
 
 
 class DeviceInfos(TypedDict):
@@ -86,8 +100,10 @@ class DeviceInfos(TypedDict):
     system_name: str
 
 
+
 class DeviceInitReq(TypedDict):
     description: NotRequired[str | None]
+
 
 
 class DeviceInitResp(TypedDict):
@@ -97,13 +113,16 @@ class DeviceInitResp(TypedDict):
     interval: int
 
 
+
 class DeviceLookupResp(TypedDict):
     description: str | None
     expires_in: int
 
 
+
 class DeviceTokenReq(TypedDict):
     device_code: str
+
 
 
 class DeviceTokenResp(TypedDict):
@@ -112,11 +131,14 @@ class DeviceTokenResp(TypedDict):
     created_at: str
 
 
+
 type DistanceSystem = Literal[0, 1]
+
 
 
 class EquipmentPostResp(TypedDict):
     id: str
+
 
 
 class ExerciseGroupModel(TypedDict):
@@ -129,16 +151,20 @@ class ExerciseGroupModel(TypedDict):
     duration_real: NotRequired[int | None]
 
 
+
 class ExerciseNameGetResp(TypedDict):
     name_taken: bool
+
 
 
 class ExercisePostResp(TypedDict):
     id: str
 
 
+
 class FCMPostModel(TypedDict):
     data: dict[str, Any]
+
 
 
 class FacebookLoginPostHandler(TypedDict):
@@ -146,13 +172,23 @@ class FacebookLoginPostHandler(TypedDict):
     lang: NotRequired[str | None]
 
 
+
+class FeedbackPost(TypedDict):
+    category: str
+    message: str
+    context: NotRequired[str | None]
+
+
+
 class FitFilesPostResp(TypedDict):
     status: str
     session_id: str
 
 
+
 class ForgotPwdResp(TypedDict):
     status: str
+
 
 
 class FriendItem(TypedDict):
@@ -162,13 +198,16 @@ class FriendItem(TypedDict):
     status: str
 
 
+
 class FriendPostModel(TypedDict):
     username: str
 
 
+
 class FriendRequestPatchModel(TypedDict):
     username: str
-    status: Literal["accepted", "refused"]
+    status: Literal['accepted', 'refused']
+
 
 
 class FriendSuggested(TypedDict):
@@ -176,19 +215,24 @@ class FriendSuggested(TypedDict):
     avatar: NotRequired[str | None]
 
 
+
 class FriendSuggestionsResp(TypedDict):
     suggested: list[FriendSuggested]
+
 
 
 class FriendsResp(TypedDict):
     friends: list[FriendItem]
 
 
+
 class GarminAuthResp(TypedDict):
     url: str
 
 
+
 type GenderType = Literal[0, 1, 2]
+
 
 
 class GeoBoundaries(TypedDict):
@@ -196,8 +240,10 @@ class GeoBoundaries(TypedDict):
     sw: list[float]
 
 
+
 class GetUsersBody(TypedDict):
     prefix: int
+
 
 
 class GetUsersResp(TypedDict):
@@ -205,13 +251,16 @@ class GetUsersResp(TypedDict):
     created: int
 
 
+
 class GoogleLoginPostHandler(TypedDict):
     token: str
     lang: NotRequired[str | None]
 
 
+
 class GroupLeavePOSTModel(TypedDict):
     id: str
+
 
 
 class GroupRequestPatchModel(TypedDict):
@@ -219,14 +268,17 @@ class GroupRequestPatchModel(TypedDict):
     name: NotRequired[str | None]
 
 
+
 class GroupRequestPostModel(TypedDict):
     name: str
     users: list[str]
 
 
+
 class GroupSessionsPostModel(TypedDict):
     id: str
     session_ids: list[str]
+
 
 
 class GroupSessionsTransferModel(TypedDict):
@@ -235,9 +287,11 @@ class GroupSessionsTransferModel(TypedDict):
     session_ids: list[str]
 
 
+
 class GroupUserPostModel(TypedDict):
     id: str
     users: list[str]
+
 
 
 class HRZone(TypedDict):
@@ -246,8 +300,17 @@ class HRZone(TypedDict):
     hr_min: NotRequired[int | None]
 
 
+
+class HRZoneModel(TypedDict):
+    zone: int
+    hr_min: int
+    hr_max: int
+
+
+
 class HealthItem(TypedDict):
     up: NotRequired[bool]
+
 
 
 class ImageItem(TypedDict):
@@ -258,14 +321,38 @@ class ImageItem(TypedDict):
     id: str
 
 
+
+class LapItem(TypedDict):
+    lap_index: int
+    ts_start: int
+    ts_end: NotRequired[int | None]
+    total_timer_time: NotRequired[float | None]
+    total_elapsed_time: NotRequired[float | None]
+    total_moving_time: NotRequired[float | None]
+    distance: NotRequired[float | None]
+    bpm_avg: NotRequired[int | None]
+    bpm_max: NotRequired[int | None]
+    speed_avg: NotRequired[float | None]
+    speed_max: NotRequired[float | None]
+    cadence_avg: NotRequired[int | None]
+    cadence_max: NotRequired[int | None]
+    power_avg: NotRequired[int | None]
+    power_max: NotRequired[int | None]
+    total_strokes: NotRequired[int | None]
+    lap_trigger: NotRequired[str | None]
+
+
+
 class LoginPostHandler(TypedDict):
     email: NotRequired[str | None]
     username: NotRequired[str | None]
     password: str
 
 
+
 class LoginTokenPostModel(TypedDict):
     token: str
+
 
 
 class LoginWithAppleResp(TypedDict):
@@ -273,9 +360,11 @@ class LoginWithAppleResp(TypedDict):
     is_new_user: NotRequired[bool | None]
 
 
+
 class LoginWithFacebookResp(TypedDict):
     status: str
     is_new_user: NotRequired[bool | None]
+
 
 
 class LoginWithGoogleResp(TypedDict):
@@ -283,16 +372,20 @@ class LoginWithGoogleResp(TypedDict):
     is_new_user: NotRequired[bool | None]
 
 
+
 class LoginWithTokenResp(TypedDict):
     status: str
+
 
 
 class LogoutPostHandler(TypedDict):
     refresh_token: str
 
 
+
 class LogoutResp(TypedDict):
     status: str
+
 
 
 class MasterTokenBody(TypedDict):
@@ -300,15 +393,18 @@ class MasterTokenBody(TypedDict):
     email: NotRequired[str | None]
 
 
+
 class MasterTokenResp(TypedDict):
     access_token: str
-    token_type: Literal["bearer"]
+    token_type: Literal['bearer']
     expires_in: int
+
 
 
 class MeasurementItem(TypedDict):
     date: str
     weight: float
+
 
 
 class MeasurementPostModel(TypedDict):
@@ -329,27 +425,28 @@ class MeasurementPostModel(TypedDict):
     knees: NotRequired[tuple[float | str | None, float | str | None] | None]
 
 
+
 class MergeSessionsPOST(TypedDict):
     session_from: str
     session_to: str
+
 
 
 class MetricItem(TypedDict):
     pass
 
 
-class MetricAnnotatedFloatAnnotatedUnionIntFloatNoneTypeFieldInfoAnnotationNoneTypeRequiredTrueMetadataGeGe0AnnotatedFloatAnnotatedUnionIntFloatNoneTypeAfterValidator(
-    TypedDict
-):
+
+class MetricAnnotatedFloatAnnotatedUnionIntFloatNoneTypeFieldInfoAnnotationNoneTypeRequiredTrueMetadataGeGe0AnnotatedFloatAnnotatedUnionIntFloatNoneTypeAfterValidator(TypedDict):
     real: float | None
     objective: float | None
 
 
-class MetricAnnotatedIntAnnotatedUnionIntFloatNoneTypeFieldInfoAnnotationNoneTypeRequiredTrueMetadataGeGe0AnnotatedIntAnnotatedUnionIntFloatNoneTypeAfterValidator(
-    TypedDict
-):
+
+class MetricAnnotatedIntAnnotatedUnionIntFloatNoneTypeFieldInfoAnnotationNoneTypeRequiredTrueMetadataGeGe0AnnotatedIntAnnotatedUnionIntFloatNoneTypeAfterValidator(TypedDict):
     real: int | None
     objective: int | None
+
 
 
 class MetricDictDict(TypedDict):
@@ -357,9 +454,11 @@ class MetricDictDict(TypedDict):
     objective: dict[str, Any] | None
 
 
+
 class MetricFloatFloat(TypedDict):
     real: float | None
     objective: float | None
+
 
 
 class MetricIntInt(TypedDict):
@@ -367,11 +466,11 @@ class MetricIntInt(TypedDict):
     objective: int | None
 
 
-class MetricTupleAnnotatedUnionIntFloatNoneTypeFieldInfoAnnotationNoneTypeRequiredTrueMetadataGeGe0AnnotatedUnionIntFloatNoneTypeFieldInfoAnnotationNoneTypeRequiredTrueMetadataGeGe0TupleAnnotatedUnionIntFloatNoneTypeFieldInfoAnnotationNoneTypeRequiredTrueMetadataGeGe0AnnotatedUnionIntFloatNoneTypeFieldInfoAnnotationNoneTypeRequiredTrueMetadataGeGe0(
-    TypedDict
-):
+
+class MetricTupleAnnotatedUnionIntFloatNoneTypeFieldInfoAnnotationNoneTypeRequiredTrueMetadataGeGe0AnnotatedUnionIntFloatNoneTypeFieldInfoAnnotationNoneTypeRequiredTrueMetadataGeGe0TupleAnnotatedUnionIntFloatNoneTypeFieldInfoAnnotationNoneTypeRequiredTrueMetadataGeGe0AnnotatedUnionIntFloatNoneTypeFieldInfoAnnotationNoneTypeRequiredTrueMetadataGeGe0(TypedDict):
     real: tuple[int | float | None, int | float | None] | None
     objective: tuple[int | float | None, int | float | None] | None
+
 
 
 class MinMaxFieldFloat(TypedDict):
@@ -379,14 +478,17 @@ class MinMaxFieldFloat(TypedDict):
     v_max: NotRequired[float | None]
 
 
+
 class MinMaxFieldInt(TypedDict):
     v_min: NotRequired[int | None]
     v_max: NotRequired[int | None]
 
 
+
 class MostSearchedItem(TypedDict):
     text: str
     count: int
+
 
 
 class MuscleItem(TypedDict):
@@ -396,16 +498,20 @@ class MuscleItem(TypedDict):
     muscle_group: str
 
 
+
 class NotificationToken(TypedDict):
     token: str
     device_infos: DeviceInfos
 
 
+
 type Objective = Literal[0, 1, 2]
+
 
 
 class PolarAuthResp(TypedDict):
     url: str
+
 
 
 class PostMediaResp(TypedDict):
@@ -415,8 +521,17 @@ class PostMediaResp(TypedDict):
     thumbnail: NotRequired[str | None]
 
 
+
 class PostSessionResp(TypedDict):
     id: str
+
+
+
+class PowerZoneModel(TypedDict):
+    zone: int
+    power_min: int
+    power_max: int
+
 
 
 class PreviousSearchedItem(TypedDict):
@@ -424,7 +539,9 @@ class PreviousSearchedItem(TypedDict):
     last_searched: str
 
 
+
 type ProfileType = Literal[0, 1, 2]
+
 
 
 class QuotaLimit(TypedDict):
@@ -432,22 +549,27 @@ class QuotaLimit(TypedDict):
     limit: int
 
 
+
 class Quotas(TypedDict):
     exercises: QuotaLimit
     groups: QuotaLimit
+
 
 
 class RefreshPostHandler(TypedDict):
     refresh_token: str
 
 
+
 class RegisterResp(TypedDict):
     status: str
+
 
 
 class RequirementItem(TypedDict):
     exercise_id: str
     requirement_id: str
+
 
 
 class SampleItem(TypedDict):
@@ -462,18 +584,22 @@ class SampleItem(TypedDict):
     location: NotRequired[list[float] | None]
 
 
+
 class SearchEquipmentItem(TypedDict):
     id: str
     name: str
     username: str
 
 
+
 class SearchEquipmentsResp(TypedDict):
     results: list[SearchEquipmentItem | str]
 
 
+
 class SearchInfosPost(TypedDict):
     search_text: str
+
 
 
 class SearchInfosResp(TypedDict):
@@ -481,65 +607,21 @@ class SearchInfosResp(TypedDict):
     last_searched: list[PreviousSearchedItem]
 
 
-class SessionExerciseModel(TypedDict):
-    exercise_id: str
-    side: NotRequired[Literal["left", "right"] | None]
-    group_position: NotRequired[int | None]
-    bpm: NotRequired[
-        MetricTupleAnnotatedUnionIntFloatNoneTypeFieldInfoAnnotationNoneTypeRequiredTrueMetadataGeGe0AnnotatedUnionIntFloatNoneTypeFieldInfoAnnotationNoneTypeRequiredTrueMetadataGeGe0TupleAnnotatedUnionIntFloatNoneTypeFieldInfoAnnotationNoneTypeRequiredTrueMetadataGeGe0AnnotatedUnionIntFloatNoneTypeFieldInfoAnnotationNoneTypeRequiredTrueMetadataGeGe0
-        | None
-    ]
-    vo2max: NotRequired[
-        MetricTupleAnnotatedUnionIntFloatNoneTypeFieldInfoAnnotationNoneTypeRequiredTrueMetadataGeGe0AnnotatedUnionIntFloatNoneTypeFieldInfoAnnotationNoneTypeRequiredTrueMetadataGeGe0TupleAnnotatedUnionIntFloatNoneTypeFieldInfoAnnotationNoneTypeRequiredTrueMetadataGeGe0AnnotatedUnionIntFloatNoneTypeFieldInfoAnnotationNoneTypeRequiredTrueMetadataGeGe0
-        | None
-    ]
-    distance: NotRequired[
-        MetricAnnotatedFloatAnnotatedUnionIntFloatNoneTypeFieldInfoAnnotationNoneTypeRequiredTrueMetadataGeGe0AnnotatedFloatAnnotatedUnionIntFloatNoneTypeAfterValidator
-        | None
-    ]
-    speed: NotRequired[
-        MetricAnnotatedFloatAnnotatedUnionIntFloatNoneTypeFieldInfoAnnotationNoneTypeRequiredTrueMetadataGeGe0AnnotatedFloatAnnotatedUnionIntFloatNoneTypeAfterValidator
-        | None
-    ]
-    duration: NotRequired[
-        MetricAnnotatedIntAnnotatedUnionIntFloatNoneTypeFieldInfoAnnotationNoneTypeRequiredTrueMetadataGeGe0AnnotatedIntAnnotatedUnionIntFloatNoneTypeAfterValidator
-        | None
-    ]
-    climb: NotRequired[
-        MetricAnnotatedIntAnnotatedUnionIntFloatNoneTypeFieldInfoAnnotationNoneTypeRequiredTrueMetadataGeGe0AnnotatedIntAnnotatedUnionIntFloatNoneTypeAfterValidator
-        | None
-    ]
-    descent: NotRequired[
-        MetricAnnotatedIntAnnotatedUnionIntFloatNoneTypeFieldInfoAnnotationNoneTypeRequiredTrueMetadataGeGe0AnnotatedIntAnnotatedUnionIntFloatNoneTypeAfterValidator
-        | None
-    ]
-    nb_reps: NotRequired[
-        MetricAnnotatedIntAnnotatedUnionIntFloatNoneTypeFieldInfoAnnotationNoneTypeRequiredTrueMetadataGeGe0AnnotatedIntAnnotatedUnionIntFloatNoneTypeAfterValidator
-        | None
-    ]
-    weight: NotRequired[
-        MetricAnnotatedFloatAnnotatedUnionIntFloatNoneTypeFieldInfoAnnotationNoneTypeRequiredTrueMetadataGeGe0AnnotatedFloatAnnotatedUnionIntFloatNoneTypeAfterValidator
-        | None
-    ]
-    power: NotRequired[
-        MetricAnnotatedIntAnnotatedUnionIntFloatNoneTypeFieldInfoAnnotationNoneTypeRequiredTrueMetadataGeGe0AnnotatedIntAnnotatedUnionIntFloatNoneTypeAfterValidator
-        | None
-    ]
-    cadence: NotRequired[
-        MetricAnnotatedFloatAnnotatedUnionIntFloatNoneTypeFieldInfoAnnotationNoneTypeRequiredTrueMetadataGeGe0AnnotatedFloatAnnotatedUnionIntFloatNoneTypeAfterValidator
-        | None
-    ]
-    others: NotRequired[MetricDictDict | None]
-
 
 class SessionGeo(TypedDict):
     boundaries: GeoBoundaries
     geojson: dict[str, Any]
 
 
+
 class Side(TypedDict):
     left: float | None
     right: float | None
+
+
+
+type SpeedUnit = Literal['km/h', 'min/km', 'min/100m', 'min/500m', 'mph']
+
 
 
 class SportItem(TypedDict):
@@ -551,17 +633,61 @@ class SportItem(TypedDict):
     sport: str | None
 
 
+
 class SportMetricsResp(TypedDict):
     default: list[str]
     overrides: dict[str, list[str]]
+
+
+
+class SportProfileItem(TypedDict):
+    id: int
+    name: str
+    ftp: int | None
+    pool_length: float | None
+    is_default: bool
+    sport_ids: list[int]
+    hr_zones: list[HRZoneModel]
+    power_zones: list[PowerZoneModel]
+
+
+
+class SportProfilePatchModel(TypedDict):
+    id: int
+    name: NotRequired[str | None]
+    ftp: NotRequired[int | None]
+    pool_length: NotRequired[float | None]
+    is_default: NotRequired[bool | None]
+    sport_ids: NotRequired[list[int] | None]
+    hr_zones: NotRequired[list[HRZoneModel] | None]
+    power_zones: NotRequired[list[PowerZoneModel] | None]
+
+
+
+class SportProfilePostModel(TypedDict):
+    name: str
+    ftp: NotRequired[int | None]
+    pool_length: NotRequired[float | None]
+    is_default: NotRequired[bool]
+    sport_ids: NotRequired[list[int]]
+    hr_zones: NotRequired[list[HRZoneModel]]
+    power_zones: NotRequired[list[PowerZoneModel]]
+
+
+
+class SportProfilePostResp(TypedDict):
+    id: int
+
 
 
 class StatusResp(TypedDict):
     status: str
 
 
+
 class SuuntoAuthResp(TypedDict):
     url: str
+
 
 
 class TagItem(TypedDict):
@@ -569,12 +695,15 @@ class TagItem(TypedDict):
     data_type: str
 
 
+
 type TemperatureSystem = Literal[0, 1]
+
 
 
 class TemplateExerciseItemPost(TypedDict):
     exercise_id: str
-    side: NotRequired[Literal["left", "right"] | None]
+    side: NotRequired[Literal['left', 'right'] | None]
+    speed_unit: NotRequired[SpeedUnit | None]
     group_position: NotRequired[int | None]
     bpm: NotRequired[tuple[int, int] | None]
     vo2max: NotRequired[tuple[int, int] | None]
@@ -590,6 +719,7 @@ class TemplateExerciseItemPost(TypedDict):
     others: NotRequired[dict[str, Any] | None]
 
 
+
 class TemplateGroupItemPost(TypedDict):
     id: NotRequired[str | None]
     nb_reps: NotRequired[int | None]
@@ -599,23 +729,28 @@ class TemplateGroupItemPost(TypedDict):
     duration: NotRequired[int | None]
 
 
+
 class TemplateMetricItem(TypedDict):
     pass
+
 
 
 class TemplatePostResp(TypedDict):
     id: str
 
 
+
 class ThirdPartyLoginResp(TypedDict):
     access_token: str
-    token_type: Literal["bearer"]
+    token_type: Literal['bearer']
     refresh_token: str
     refresh_expires_at: str
     is_new_user: NotRequired[bool | None]
 
 
+
 type ThirdPartyStatus = Literal[0, 1, 2]
+
 
 
 class ThumbnailItem(TypedDict):
@@ -623,6 +758,7 @@ class ThumbnailItem(TypedDict):
     file_type: str
     width: int
     height: int
+
 
 
 class TokenCreatedResp(TypedDict):
@@ -633,6 +769,7 @@ class TokenCreatedResp(TypedDict):
     created_at: str
 
 
+
 class TokenResp(TypedDict):
     id: int
     description: str | None
@@ -640,7 +777,9 @@ class TokenResp(TypedDict):
     created_at: str
 
 
+
 type TrainingStatus = Literal[0, 1]
+
 
 
 class UrlItem(TypedDict):
@@ -648,9 +787,11 @@ class UrlItem(TypedDict):
     url: str
 
 
+
 class UserPatchResp(TypedDict):
     status: str
     fields: NotRequired[dict[str, Any] | None]
+
 
 
 class ValidationError(TypedDict):
@@ -661,8 +802,10 @@ class ValidationError(TypedDict):
     ctx: NotRequired[dict[str, Any]]
 
 
+
 class VersionItem(TypedDict):
     version: str
+
 
 
 class VideoItem(TypedDict):
@@ -674,25 +817,31 @@ class VideoItem(TypedDict):
     thumbnails: list[ThumbnailItem]
 
 
+
 type VisibilityType = Literal[0, 1, 2]
 
 
+
 type WeightSystem = Literal[0, 1]
+
 
 
 class WithingsAuthUrlResp(TypedDict):
     url: str
 
 
+
 class ApiRoutersAuth2UtilsLoginResp(TypedDict):
     access_token: str
-    token_type: Literal["bearer"]
+    token_type: Literal['bearer']
     refresh_token: str
     refresh_expires_at: str
 
 
+
 class ApiRoutersAuthLoginLoginResp(TypedDict):
     status: str
+
 
 
 class ApiRoutersGroupsGroupsGroupItem(TypedDict):
@@ -701,15 +850,18 @@ class ApiRoutersGroupsGroupsGroupItem(TypedDict):
     is_admin: bool
 
 
+
 class ApiRoutersGroupsGroupsUserItem(TypedDict):
     username: str
     is_admin: bool
     avatar: NotRequired[str | None]
 
 
+
 class ApiRoutersSearchUsersUserItem(TypedDict):
     username: str
     avatar: NotRequired[str | None]
+
 
 
 class ApiRoutersTrainingExercisesExerciseExerciseItem(TypedDict):
@@ -730,12 +882,14 @@ class ApiRoutersTrainingExercisesExerciseExerciseItem(TypedDict):
     source: str
 
 
+
 class ApiRoutersTrainingSessionModelsExerciseItem(TypedDict):
     id: str
     name: str
     icon: NotRequired[str | None]
     media: NotRequired[VideoItem | ImageItem | UrlItem | None]
     can_edit: bool
+
 
 
 class ApiRoutersTrainingSessionModelsGroupItem(TypedDict):
@@ -747,6 +901,7 @@ class ApiRoutersTrainingSessionModelsGroupItem(TypedDict):
     description: NotRequired[str | None]
     duration: NotRequired[int | None]
     duration_real: NotRequired[int | None]
+
 
 
 class ActivityItem(TypedDict):
@@ -780,6 +935,7 @@ class ActivityItem(TypedDict):
     map: str | None
 
 
+
 class ActivityStatItem(TypedDict):
     date: str
     sports: list[SportItem]
@@ -787,8 +943,10 @@ class ActivityStatItem(TypedDict):
     steps: int | None
 
 
+
 class CountriesResp(TypedDict):
     countries: list[CountryItem]
+
 
 
 class EquipmentItem(TypedDict):
@@ -798,7 +956,8 @@ class EquipmentItem(TypedDict):
     medias: list[VideoItem | ImageItem | UrlItem]
     username: str
     can_edit: bool
-    source: Literal["user", "friend"]
+    source: Literal['user', 'friend']
+
 
 
 class EquipmentPatchModel(TypedDict):
@@ -807,9 +966,11 @@ class EquipmentPatchModel(TypedDict):
     name: NotRequired[str | None]
 
 
+
 class EquipmentPostModel(TypedDict):
     visibility: NotRequired[VisibilityType | None]
     name: str
+
 
 
 class ExercisePatchModel(TypedDict):
@@ -826,6 +987,7 @@ class ExercisePatchModel(TypedDict):
     name: NotRequired[str | None]
 
 
+
 class ExercisePostModel(TypedDict):
     description: NotRequired[str | None]
     url: NotRequired[str | None]
@@ -839,10 +1001,12 @@ class ExercisePostModel(TypedDict):
     name: str
 
 
+
 class GroupItemLite(TypedDict):
     id: str
     name: str
     users: list[ApiRoutersGroupsGroupsUserItem]
+
 
 
 class GroupItemSummary(TypedDict):
@@ -851,6 +1015,7 @@ class GroupItemSummary(TypedDict):
     is_admin: bool
     users: list[ApiRoutersGroupsGroupsUserItem]
     nb_sessions: int
+
 
 
 class GroupSessionItem(TypedDict):
@@ -873,6 +1038,8 @@ class GroupSessionItem(TypedDict):
     power_max: NotRequired[int | None]
     speed_avg: NotRequired[float | None]
     speed_max: NotRequired[float | None]
+    pool_length: NotRequired[float | None]
+    has_laps: NotRequired[bool]
     nb_exercises: int
     status: NotRequired[TrainingStatus]
     username: str
@@ -884,13 +1051,16 @@ class GroupSessionItem(TypedDict):
     created_by: NotRequired[str | None]
 
 
+
 class HTTPValidationError(TypedDict):
     detail: NotRequired[list[ValidationError]]
+
 
 
 class LoadActivitiesResp(TypedDict):
     offset: int
     activities: list[ActivityItem]
+
 
 
 class MeasurementLight(TypedDict):
@@ -908,43 +1078,17 @@ class MeasurementLight(TypedDict):
     knees: NotRequired[Side | None]
 
 
+
 class MetricMinMaxFieldFloatMinMaxFieldFloat(TypedDict):
     real: MinMaxFieldFloat | None
     objective: MinMaxFieldFloat | None
+
 
 
 class MetricMinMaxFieldIntMinMaxFieldInt(TypedDict):
     real: MinMaxFieldInt | None
     objective: MinMaxFieldInt | None
 
-
-class PatchSessionModel(TypedDict):
-    notes: NotRequired[str | None]
-    name: NotRequired[str | None]
-    visibility: NotRequired[VisibilityType | None]
-    ts_start: NotRequired[str | None]
-    ts_end: NotRequired[str | None]
-    tz: NotRequired[str | None]
-    tags: NotRequired[list[str] | None]
-    groups: NotRequired[list[ExerciseGroupModel] | None]
-    calories: NotRequired[int | None]
-    bpm: NotRequired[int | None]
-    distance: NotRequired[float | None]
-    climb: NotRequired[int | None]
-    descent: NotRequired[float | None]
-    bpm_avg: NotRequired[int | None]
-    bpm_max: NotRequired[int | None]
-    cadence_avg: NotRequired[int | None]
-    cadence_max: NotRequired[int | None]
-    power_avg: NotRequired[int | None]
-    power_max: NotRequired[int | None]
-    speed_avg: NotRequired[float | None]
-    speed_max: NotRequired[float | None]
-    duplicate: NotRequired[bool]
-    lang: NotRequired[str]
-    status: NotRequired[TrainingStatus]
-    id: str
-    exercises: NotRequired[list[SessionExerciseModel] | None]
 
 
 class PreviousMeasurements(TypedDict):
@@ -962,6 +1106,7 @@ class PreviousMeasurements(TypedDict):
     knees: NotRequired[Side | None]
 
 
+
 class RegisterData(TypedDict):
     email: str
     username: str
@@ -971,6 +1116,7 @@ class RegisterData(TypedDict):
     password: str
     distance_system: NotRequired[DistanceSystem]
     temp_system: NotRequired[TemperatureSystem]
+
 
 
 class SearchExerciseItem(TypedDict):
@@ -989,8 +1135,10 @@ class SearchExerciseItem(TypedDict):
     can_edit: bool
 
 
+
 class SearchExercisesResp(TypedDict):
     results: list[SearchExerciseItem | str]
+
 
 
 class SearchSessionItem(TypedDict):
@@ -1022,12 +1170,15 @@ class SearchSessionItem(TypedDict):
     status: TrainingStatus
 
 
+
 class SearchSessionResp(TypedDict):
     results: list[SearchSessionItem | str]
 
 
+
 class SearchTagsResp(TypedDict):
     results: list[TagItem]
+
 
 
 class SearchTemplateItem(TypedDict):
@@ -1040,8 +1191,30 @@ class SearchTemplateItem(TypedDict):
     can_edit: bool
 
 
+
 class SearchTemplatesResp(TypedDict):
     results: list[SearchTemplateItem | str]
+
+
+
+class SessionExerciseModel(TypedDict):
+    exercise_id: str
+    side: NotRequired[Literal['left', 'right'] | None]
+    speed_unit: NotRequired[SpeedUnit | None]
+    group_position: NotRequired[int | None]
+    bpm: NotRequired[MetricTupleAnnotatedUnionIntFloatNoneTypeFieldInfoAnnotationNoneTypeRequiredTrueMetadataGeGe0AnnotatedUnionIntFloatNoneTypeFieldInfoAnnotationNoneTypeRequiredTrueMetadataGeGe0TupleAnnotatedUnionIntFloatNoneTypeFieldInfoAnnotationNoneTypeRequiredTrueMetadataGeGe0AnnotatedUnionIntFloatNoneTypeFieldInfoAnnotationNoneTypeRequiredTrueMetadataGeGe0 | None]
+    vo2max: NotRequired[MetricTupleAnnotatedUnionIntFloatNoneTypeFieldInfoAnnotationNoneTypeRequiredTrueMetadataGeGe0AnnotatedUnionIntFloatNoneTypeFieldInfoAnnotationNoneTypeRequiredTrueMetadataGeGe0TupleAnnotatedUnionIntFloatNoneTypeFieldInfoAnnotationNoneTypeRequiredTrueMetadataGeGe0AnnotatedUnionIntFloatNoneTypeFieldInfoAnnotationNoneTypeRequiredTrueMetadataGeGe0 | None]
+    distance: NotRequired[MetricAnnotatedFloatAnnotatedUnionIntFloatNoneTypeFieldInfoAnnotationNoneTypeRequiredTrueMetadataGeGe0AnnotatedFloatAnnotatedUnionIntFloatNoneTypeAfterValidator | None]
+    speed: NotRequired[MetricAnnotatedFloatAnnotatedUnionIntFloatNoneTypeFieldInfoAnnotationNoneTypeRequiredTrueMetadataGeGe0AnnotatedFloatAnnotatedUnionIntFloatNoneTypeAfterValidator | None]
+    duration: NotRequired[MetricAnnotatedIntAnnotatedUnionIntFloatNoneTypeFieldInfoAnnotationNoneTypeRequiredTrueMetadataGeGe0AnnotatedIntAnnotatedUnionIntFloatNoneTypeAfterValidator | None]
+    climb: NotRequired[MetricAnnotatedIntAnnotatedUnionIntFloatNoneTypeFieldInfoAnnotationNoneTypeRequiredTrueMetadataGeGe0AnnotatedIntAnnotatedUnionIntFloatNoneTypeAfterValidator | None]
+    descent: NotRequired[MetricAnnotatedIntAnnotatedUnionIntFloatNoneTypeFieldInfoAnnotationNoneTypeRequiredTrueMetadataGeGe0AnnotatedIntAnnotatedUnionIntFloatNoneTypeAfterValidator | None]
+    nb_reps: NotRequired[MetricAnnotatedIntAnnotatedUnionIntFloatNoneTypeFieldInfoAnnotationNoneTypeRequiredTrueMetadataGeGe0AnnotatedIntAnnotatedUnionIntFloatNoneTypeAfterValidator | None]
+    weight: NotRequired[MetricAnnotatedFloatAnnotatedUnionIntFloatNoneTypeFieldInfoAnnotationNoneTypeRequiredTrueMetadataGeGe0AnnotatedFloatAnnotatedUnionIntFloatNoneTypeAfterValidator | None]
+    power: NotRequired[MetricAnnotatedIntAnnotatedUnionIntFloatNoneTypeFieldInfoAnnotationNoneTypeRequiredTrueMetadataGeGe0AnnotatedIntAnnotatedUnionIntFloatNoneTypeAfterValidator | None]
+    cadence: NotRequired[MetricAnnotatedFloatAnnotatedUnionIntFloatNoneTypeFieldInfoAnnotationNoneTypeRequiredTrueMetadataGeGe0AnnotatedFloatAnnotatedUnionIntFloatNoneTypeAfterValidator | None]
+    others: NotRequired[MetricDictDict | None]
+
 
 
 class SessionItem(TypedDict):
@@ -1064,6 +1237,8 @@ class SessionItem(TypedDict):
     power_max: NotRequired[int | None]
     speed_avg: NotRequired[float | None]
     speed_max: NotRequired[float | None]
+    pool_length: NotRequired[float | None]
+    has_laps: NotRequired[bool]
     nb_exercises: int
     status: NotRequired[TrainingStatus]
     username: str
@@ -1072,6 +1247,7 @@ class SessionItem(TypedDict):
     device_name: NotRequired[str | None]
     can_edit: bool
     icon: str
+
 
 
 class SessionModel(TypedDict):
@@ -1096,10 +1272,12 @@ class SessionModel(TypedDict):
     power_max: NotRequired[int | None]
     speed_avg: NotRequired[float | None]
     speed_max: NotRequired[float | None]
+    pool_length: NotRequired[float | None]
     duplicate: NotRequired[bool]
     lang: NotRequired[str]
     status: NotRequired[TrainingStatus]
     exercises: list[SessionExerciseModel]
+
 
 
 class SessionResp(TypedDict):
@@ -1124,6 +1302,8 @@ class SessionResp(TypedDict):
     power_max: int | None
     speed_avg: float | None
     speed_max: float | None
+    pool_length: float | None
+    has_laps: NotRequired[bool]
     heart_zones: list[HRZone]
     device_name: str | None
     sport_id: int | None
@@ -1135,8 +1315,10 @@ class SessionResp(TypedDict):
     status: TrainingStatus
 
 
+
 class Stats(TypedDict):
     last: MeasurementLight | None
+
 
 
 class TemplatePatchModel(TypedDict):
@@ -1149,6 +1331,7 @@ class TemplatePatchModel(TypedDict):
     name: NotRequired[str | None]
 
 
+
 class TemplatePostModel(TypedDict):
     notes: NotRequired[str | None]
     visibility: NotRequired[VisibilityType | None]
@@ -1158,8 +1341,10 @@ class TemplatePostModel(TypedDict):
     name: str
 
 
+
 class TokenListResp(TypedDict):
     tokens: list[TokenResp]
+
 
 
 class TrainingTemplateGETModel(TypedDict):
@@ -1176,6 +1361,7 @@ class TrainingTemplateGETModel(TypedDict):
     icon: str
 
 
+
 class UserData(TypedDict):
     email: NotRequired[str | None]
     username: NotRequired[str | None]
@@ -1190,6 +1376,7 @@ class UserData(TypedDict):
     weight_system: NotRequired[WeightSystem | None]
     birthdate: NotRequired[str | None]
     objective: NotRequired[Objective | None]
+
 
 
 class UserResp(TypedDict):
@@ -1214,15 +1401,18 @@ class UserResp(TypedDict):
     quotas: Quotas
 
 
+
 class CreateGroupResp(TypedDict):
     status: str
     group: GroupItemLite
+
 
 
 class GroupResp(TypedDict):
     group: NotRequired[ApiRoutersGroupsGroupsGroupItem | None]
     sessions: NotRequired[list[GroupSessionItem] | None]
     users: NotRequired[list[ApiRoutersGroupsGroupsUserItem] | None]
+
 
 
 class MeasurementResp(TypedDict):
@@ -1243,16 +1433,51 @@ class MeasurementResp(TypedDict):
     notes: NotRequired[str | None]
 
 
+
 class MeasurementStats(TypedDict):
     stats: Stats
+
 
 
 class PatchMeasurementResp(TypedDict):
     measurement: MeasurementResp
 
 
+
+class PatchSessionModel(TypedDict):
+    notes: NotRequired[str | None]
+    name: NotRequired[str | None]
+    visibility: NotRequired[VisibilityType | None]
+    ts_start: NotRequired[str | None]
+    ts_end: NotRequired[str | None]
+    tz: NotRequired[str | None]
+    tags: NotRequired[list[str] | None]
+    groups: NotRequired[list[ExerciseGroupModel] | None]
+    calories: NotRequired[int | None]
+    bpm: NotRequired[int | None]
+    distance: NotRequired[float | None]
+    climb: NotRequired[int | None]
+    descent: NotRequired[float | None]
+    bpm_avg: NotRequired[int | None]
+    bpm_max: NotRequired[int | None]
+    cadence_avg: NotRequired[int | None]
+    cadence_max: NotRequired[int | None]
+    power_avg: NotRequired[int | None]
+    power_max: NotRequired[int | None]
+    speed_avg: NotRequired[float | None]
+    speed_max: NotRequired[float | None]
+    pool_length: NotRequired[float | None]
+    duplicate: NotRequired[bool]
+    lang: NotRequired[str]
+    status: NotRequired[TrainingStatus]
+    id: str
+    exercises: NotRequired[list[SessionExerciseModel] | None]
+
+
+
 class PostMeasurementResp(TypedDict):
     measurement: MeasurementResp
+
 
 
 class UserGetResp(TypedDict):

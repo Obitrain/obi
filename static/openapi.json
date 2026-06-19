@@ -3,7 +3,7 @@
   "info": {
     "title": "Obitrain API",
     "description": "API Endpoint for Obitrain",
-    "version": "1.93.0"
+    "version": "1.98.0"
   },
   "paths": {
     "/v1/user/login": {
@@ -1407,6 +1407,66 @@
         }
       }
     },
+    "/v1/feedback": {
+      "post": {
+        "tags": [
+          "Feedback Endpoint"
+        ],
+        "summary": "Save user-submitted feedback, such as a \"device not found\" request.",
+        "description": "Save user-submitted feedback, such as a \"device not found\" request.",
+        "operationId": "Save_user_submitted_feedback__such_as_a__device_not_found__request__v1_feedback_post",
+        "parameters": [
+          {
+            "name": "obitrain",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Obitrain"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FeedbackPost"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StatusResp"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/third-party/withings": {
       "get": {
         "tags": [
@@ -2305,6 +2365,70 @@
                     "$ref": "#/components/schemas/SampleItem"
                   },
                   "title": "Response Load The Samples For The Given Training Session V1 Training Session Samples Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/training/session/laps": {
+      "get": {
+        "tags": [
+          "Session endpoint"
+        ],
+        "summary": "Load the laps (interval/rep structure) for the given training session",
+        "description": "Load the laps (interval/rep structure) for the given training session",
+        "operationId": "Load_the_laps__interval_rep_structure__for_the_given_training_session_v1_training_session_laps_get",
+        "parameters": [
+          {
+            "name": "session_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Session Id"
+            }
+          },
+          {
+            "name": "obitrain",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Obitrain"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/LapItem"
+                  },
+                  "title": "Response Load The Laps  Interval Rep Structure  For The Given Training Session V1 Training Session Laps Get"
                 }
               }
             }
@@ -3325,6 +3449,300 @@
                     "$ref": "#/components/schemas/EquipmentItem"
                   },
                   "title": "Response Loads User Equipments V1 Training Equipments Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/training/sport-profile": {
+      "get": {
+        "tags": [
+          "Sport profiles endpoint"
+        ],
+        "summary": "Get a sport profile",
+        "description": "Get a sport profile",
+        "operationId": "Get_a_sport_profile_v1_training_sport_profile_get",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Id"
+            }
+          },
+          {
+            "name": "obitrain",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Obitrain"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/SportProfileItem"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Response Get A Sport Profile V1 Training Sport Profile Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Sport profiles endpoint"
+        ],
+        "summary": "Create a new sport profile.",
+        "description": "Create a new sport profile.\n\nA default profile is the default for the sports it is linked to (one default\nper sport): conflicting defaults are unset.",
+        "operationId": "Create_a_new_sport_profile__v1_training_sport_profile_post",
+        "parameters": [
+          {
+            "name": "obitrain",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Obitrain"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SportProfilePostModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SportProfilePostResp"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Sport profiles endpoint"
+        ],
+        "summary": "Update the specified fields of a sport profile and return the updated entity.",
+        "description": "Update the specified fields of a sport profile and return the updated entity.\n\n`sport_ids`, `hr_zones` and `power_zones` are replaced wholesale when provided.",
+        "operationId": "Update_the_specified_fields_of_a_sport_profile_and_return_the_updated_entity__v1_training_sport_profile_patch",
+        "parameters": [
+          {
+            "name": "obitrain",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Obitrain"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SportProfilePatchModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SportProfileItem"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Sport profiles endpoint"
+        ],
+        "summary": "Delete a sport profile",
+        "description": "Delete a sport profile",
+        "operationId": "Delete_a_sport_profile_v1_training_sport_profile_delete",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Id"
+            }
+          },
+          {
+            "name": "obitrain",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Obitrain"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StatusResp"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/training/sport-profiles": {
+      "get": {
+        "tags": [
+          "Sport profiles endpoint"
+        ],
+        "summary": "List the user's sport profiles (defaults first)",
+        "description": "List the user's sport profiles (defaults first)",
+        "operationId": "List_the_user_s_sport_profiles__defaults_first__v1_training_sport_profiles_get",
+        "parameters": [
+          {
+            "name": "obitrain",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Obitrain"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SportProfileItem"
+                  },
+                  "title": "Response List The User S Sport Profiles  Defaults First  V1 Training Sport Profiles Get"
                 }
               }
             }
@@ -6954,6 +7372,19 @@
           "user_code": {
             "type": "string",
             "title": "User Code"
+          },
+          "expires_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Expires At",
+            "description": "Lifetime for the token issued to the device. If set, the token expires at this time; if omitted, the token never expires."
           }
         },
         "type": "object",
@@ -7683,6 +8114,40 @@
         ],
         "title": "FacebookLoginPostHandler"
       },
+      "FeedbackPost": {
+        "properties": {
+          "category": {
+            "type": "string",
+            "maxLength": 50,
+            "minLength": 1,
+            "title": "Category"
+          },
+          "message": {
+            "type": "string",
+            "maxLength": 2000,
+            "minLength": 1,
+            "title": "Message"
+          },
+          "context": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 50
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "category",
+          "message"
+        ],
+        "title": "FeedbackPost"
+      },
       "FitFilesPostResp": {
         "properties": {
           "status": {
@@ -8331,6 +8796,22 @@
             ],
             "title": "Speed Max"
           },
+          "pool_length": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pool Length"
+          },
+          "has_laps": {
+            "type": "boolean",
+            "title": "Has Laps",
+            "default": false
+          },
           "nb_exercises": {
             "type": "integer",
             "title": "Nb Exercises"
@@ -8506,6 +8987,32 @@
         ],
         "title": "HRZone"
       },
+      "HRZoneModel": {
+        "properties": {
+          "zone": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Zone"
+          },
+          "hr_min": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Hr Min"
+          },
+          "hr_max": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Hr Max"
+          }
+        },
+        "type": "object",
+        "required": [
+          "zone",
+          "hr_min",
+          "hr_max"
+        ],
+        "title": "HRZoneModel"
+      },
       "HTTPValidationError": {
         "properties": {
           "detail": {
@@ -8562,6 +9069,189 @@
           "id"
         ],
         "title": "ImageItem"
+      },
+      "LapItem": {
+        "properties": {
+          "lap_index": {
+            "type": "integer",
+            "title": "Lap Index"
+          },
+          "ts_start": {
+            "type": "integer",
+            "title": "Ts Start"
+          },
+          "ts_end": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ts End"
+          },
+          "total_timer_time": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Total Timer Time"
+          },
+          "total_elapsed_time": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Total Elapsed Time"
+          },
+          "total_moving_time": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Total Moving Time"
+          },
+          "distance": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Distance"
+          },
+          "bpm_avg": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bpm Avg"
+          },
+          "bpm_max": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bpm Max"
+          },
+          "speed_avg": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Speed Avg"
+          },
+          "speed_max": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Speed Max"
+          },
+          "cadence_avg": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cadence Avg"
+          },
+          "cadence_max": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cadence Max"
+          },
+          "power_avg": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Power Avg"
+          },
+          "power_max": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Power Max"
+          },
+          "total_strokes": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Total Strokes"
+          },
+          "lap_trigger": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lap Trigger"
+          }
+        },
+        "type": "object",
+        "required": [
+          "lap_index",
+          "ts_start"
+        ],
+        "title": "LapItem"
       },
       "LoadActivitiesResp": {
         "properties": {
@@ -10277,6 +10967,19 @@
             ],
             "title": "Speed Max"
           },
+          "pool_length": {
+            "anyOf": [
+              {
+                "type": "number",
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pool Length",
+            "description": "Pool length in meters (overrides the device value)"
+          },
           "duplicate": {
             "type": "boolean",
             "title": "Duplicate",
@@ -10390,6 +11093,32 @@
           "id"
         ],
         "title": "PostSessionResp"
+      },
+      "PowerZoneModel": {
+        "properties": {
+          "zone": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Zone"
+          },
+          "power_min": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Power Min"
+          },
+          "power_max": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Power Max"
+          }
+        },
+        "type": "object",
+        "required": [
+          "zone",
+          "power_min",
+          "power_max"
+        ],
+        "title": "PowerZoneModel"
       },
       "PreviousMeasurements": {
         "properties": {
@@ -11406,6 +12135,16 @@
             ],
             "title": "Side"
           },
+          "speed_unit": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SpeedUnit"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "group_position": {
             "anyOf": [
               {
@@ -11778,6 +12517,22 @@
             ],
             "title": "Speed Max"
           },
+          "pool_length": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pool Length"
+          },
+          "has_laps": {
+            "type": "boolean",
+            "title": "Has Laps",
+            "default": false
+          },
           "nb_exercises": {
             "type": "integer",
             "title": "Nb Exercises"
@@ -12087,6 +12842,19 @@
             ],
             "title": "Speed Max"
           },
+          "pool_length": {
+            "anyOf": [
+              {
+                "type": "number",
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pool Length",
+            "description": "Pool length in meters (overrides the device value)"
+          },
           "duplicate": {
             "type": "boolean",
             "title": "Duplicate",
@@ -12325,6 +13093,22 @@
             ],
             "title": "Speed Max"
           },
+          "pool_length": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pool Length"
+          },
+          "has_laps": {
+            "type": "boolean",
+            "title": "Has Laps",
+            "default": false
+          },
           "heart_zones": {
             "items": {
               "$ref": "#/components/schemas/HRZone"
@@ -12416,6 +13200,7 @@
           "power_max",
           "speed_avg",
           "speed_max",
+          "pool_length",
           "heart_zones",
           "device_name",
           "sport_id",
@@ -12459,6 +13244,16 @@
           "right"
         ],
         "title": "Side"
+      },
+      "SpeedUnit": {
+        "type": "string",
+        "enum": [
+          "km/h",
+          "min/km",
+          "min/100m",
+          "min/500m",
+          "mph"
+        ]
       },
       "SportItem": {
         "properties": {
@@ -12531,6 +13326,259 @@
           "overrides"
         ],
         "title": "SportMetricsResp"
+      },
+      "SportProfileItem": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "ftp": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ftp"
+          },
+          "pool_length": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pool Length"
+          },
+          "is_default": {
+            "type": "boolean",
+            "title": "Is Default"
+          },
+          "sport_ids": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array",
+            "title": "Sport Ids"
+          },
+          "hr_zones": {
+            "items": {
+              "$ref": "#/components/schemas/HRZoneModel"
+            },
+            "type": "array",
+            "title": "Hr Zones"
+          },
+          "power_zones": {
+            "items": {
+              "$ref": "#/components/schemas/PowerZoneModel"
+            },
+            "type": "array",
+            "title": "Power Zones"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "ftp",
+          "pool_length",
+          "is_default",
+          "sport_ids",
+          "hr_zones",
+          "power_zones"
+        ],
+        "title": "SportProfileItem"
+      },
+      "SportProfilePatchModel": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 100,
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "ftp": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ftp"
+          },
+          "pool_length": {
+            "anyOf": [
+              {
+                "type": "number",
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pool Length"
+          },
+          "is_default": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Is Default"
+          },
+          "sport_ids": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "integer"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sport Ids"
+          },
+          "hr_zones": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/HRZoneModel"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hr Zones"
+          },
+          "power_zones": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/PowerZoneModel"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Power Zones"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id"
+        ],
+        "title": "SportProfilePatchModel"
+      },
+      "SportProfilePostModel": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Name"
+          },
+          "ftp": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ftp"
+          },
+          "pool_length": {
+            "anyOf": [
+              {
+                "type": "number",
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pool Length",
+            "description": "Default pool length in meters for swim sessions"
+          },
+          "is_default": {
+            "type": "boolean",
+            "title": "Is Default",
+            "default": false
+          },
+          "sport_ids": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array",
+            "title": "Sport Ids"
+          },
+          "hr_zones": {
+            "items": {
+              "$ref": "#/components/schemas/HRZoneModel"
+            },
+            "type": "array",
+            "title": "Hr Zones"
+          },
+          "power_zones": {
+            "items": {
+              "$ref": "#/components/schemas/PowerZoneModel"
+            },
+            "type": "array",
+            "title": "Power Zones"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "title": "SportProfilePostModel"
+      },
+      "SportProfilePostResp": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id"
+        ],
+        "title": "SportProfilePostResp"
       },
       "Stats": {
         "properties": {
@@ -12628,6 +13676,16 @@
               }
             ],
             "title": "Side"
+          },
+          "speed_unit": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SpeedUnit"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "group_position": {
             "anyOf": [
@@ -14200,6 +15258,10 @@
       "description": "Endpoint used to send APN or FCM notification to users (need to be admin)"
     },
     {
+      "name": "Feedback Endpoint",
+      "description": "User-submitted feedback (e.g. device requests)"
+    },
+    {
       "name": "Session endpoint",
       "description": ""
     },
@@ -14235,6 +15297,10 @@
     },
     {
       "name": "Equipments endpoint",
+      "description": ""
+    },
+    {
+      "name": "Sport profiles endpoint",
       "description": ""
     },
     {

@@ -35,6 +35,12 @@ ci: lint check test drift
 codegen:
     sh bin/codegen.sh
 
+# Fetch the spec from an obitrain-api release tag (latest by default) and regenerate models (GITLAB_TOKEN required)
+[group('codegen')]
+refresh tag="":
+    bin/fetch-spec.sh {{ tag }}
+    bin/codegen.sh
+
 # Fail if generated files drifted from the spec
 [group('codegen')]
 drift: codegen
