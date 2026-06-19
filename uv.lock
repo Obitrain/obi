@@ -185,6 +185,11 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/f6/ef/8e2479e3ba432bb3333d0f01d6bdc520cc7f765ccbfac134b015d806bc2b/datamodel_code_generator-0.59.0-py3-none-any.whl", hash = "sha256:c8c119ab618d24a619d635fef7aa9c96b69e069a4d287c9adfc148ae28368a69", size = 316232, upload-time = "2026-05-29T15:47:53.228Z" },
 ]
 
+[package.optional-dependencies]
+ruff = [
+    { name = "ruff" },
+]
+
 [[package]]
 name = "decli"
 version = "0.6.3"
@@ -427,7 +432,7 @@ wheels = [
 
 [[package]]
 name = "obitrain"
-version = "0.1.0"
+version = "0.2.0"
 source = { editable = "." }
 dependencies = [
     { name = "filelock" },
@@ -442,7 +447,7 @@ bump = [
     { name = "commitizen" },
 ]
 codegen = [
-    { name = "datamodel-code-generator" },
+    { name = "datamodel-code-generator", extra = ["ruff"] },
 ]
 dev = [
     { name = "pyright" },
@@ -466,7 +471,7 @@ requires-dist = [
 
 [package.metadata.requires-dev]
 bump = [{ name = "commitizen", specifier = ">=4.8.3" }]
-codegen = [{ name = "datamodel-code-generator", specifier = ">=0.28" }]
+codegen = [{ name = "datamodel-code-generator", extras = ["ruff"], specifier = ">=0.28" }]
 dev = [
     { name = "pyright", specifier = ">=1.1.388" },
     { name = "pytest", specifier = ">=8.3.3" },

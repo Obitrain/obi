@@ -32,7 +32,7 @@ dev = [
     "pytest-asyncio>=0.24.0",
     "ruff>=0.12.1",
 ]
-codegen = ["datamodel-code-generator>=0.28"]
+codegen = ["datamodel-code-generator[ruff]>=0.28"]
 bump = ["commitizen>=4.8.3"]
 docs = [
     "zensical>=0.0.43",
