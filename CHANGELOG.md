@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.1 (2026-06-22)
+
+### Fix
+
+- derive __version__ from package metadata
+- **codegen**: use ruff formatters and add `just refresh`
+
 ## 0.2.0
 
 - **QR code login** — `obi auth login` renders a scannable QR code for the device-link URL,
