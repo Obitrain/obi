@@ -3,7 +3,7 @@
   "info": {
     "title": "Obitrain API",
     "description": "API Endpoint for Obitrain",
-    "version": "1.98.0"
+    "version": "1.99.0"
   },
   "paths": {
     "/v1/user/login": {
@@ -2387,9 +2387,9 @@
         "tags": [
           "Session endpoint"
         ],
-        "summary": "Load the laps (interval/rep structure) for the given training session",
-        "description": "Load the laps (interval/rep structure) for the given training session",
-        "operationId": "Load_the_laps__interval_rep_structure__for_the_given_training_session_v1_training_session_laps_get",
+        "summary": "Load the lap structure for the given training session.",
+        "description": "Load the lap structure for the given training session.\n\ngranularity=\"laps\" (default) returns the device's interval/rep laps. granularity=\"length\"\nreturns per-pool-length swim splits reconstructed from the 1 s distance channel (~1 s precision,\nfiner than the samples endpoint); it is empty for anything but a pool swim with a known length.",
+        "operationId": "Load_the_lap_structure_for_the_given_training_session__v1_training_session_laps_get",
         "parameters": [
           {
             "name": "session_id",
@@ -2399,6 +2399,20 @@
               "type": "string",
               "format": "uuid",
               "title": "Session Id"
+            }
+          },
+          {
+            "name": "granularity",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "enum": [
+                "laps",
+                "length"
+              ],
+              "type": "string",
+              "default": "laps",
+              "title": "Granularity"
             }
           },
           {
@@ -2428,7 +2442,7 @@
                   "items": {
                     "$ref": "#/components/schemas/LapItem"
                   },
-                  "title": "Response Load The Laps  Interval Rep Structure  For The Given Training Session V1 Training Session Laps Get"
+                  "title": "Response Load The Lap Structure For The Given Training Session  V1 Training Session Laps Get"
                 }
               }
             }
