@@ -1,6 +1,6 @@
 [project]
 name = "obitrain"
-version = "0.2.0"
+version = "0.2.1"
 description = "Command-line client for the Obitrain API"
 authors = [{ name = "Julien Brayere", email = "julien.brayere@obitrain.com" }]
 readme = "README.md"
