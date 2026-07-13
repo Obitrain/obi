@@ -23,6 +23,7 @@ def test_list_grep_filters(run_cli):
         pytest.param('distance', '/v1/stats/activity/{range_type}', id='schema-field-name'),
         pytest.param('weekly', '/v1/stats/activity/{range_type}', id='param-enum-value'),
         pytest.param('user stats', '/v1/stats/activity/{range_type}', id='summary-text'),
+        pytest.param('own training history', '/v1/activities', id='description-text'),
         pytest.param('sportitem', '/v1/stats/activity/{range_type}', id='schema-name'),
     ],
 )
@@ -49,6 +50,32 @@ def test_show_by_operation_id(run_cli):
     assert op['path'] == '/v1/user'
     assert op['method'] == 'GET'
     assert op['schemas']['UserGetResp']['properties']  # definitions are inlined, not just names
+
+
+@pytest.mark.parametrize(
+    ('args', 'expected'),
+    [
+        pytest.param(('/v1/activities',), '/v1/training/sessions', id='extra-info-kept'),
+        pytest.param(('/v1/user', '-X', 'GET'), None, id='summary-duplicate-dropped'),
+    ],
+)
+def test_show_description(run_cli, args, expected):
+    _, out, _ = run_cli('schema', 'show', *args)
+    description = json.loads(out)['description']
+    assert description is None if expected is None else expected in description
+
+
+@pytest.mark.parametrize(
+    ('param', 'deprecated'),
+    [
+        pytest.param('all_users', True, id='deprecated-boolean'),
+        pytest.param('scope', False, id='current-param'),
+    ],
+)
+def test_show_surfaces_param_deprecation(run_cli, param, deprecated):
+    _, out, _ = run_cli('schema', 'show', '/v1/search/session')
+    params = {p['name']: p for p in json.loads(out)['parameters']}
+    assert params[param]['deprecated'] is deprecated
 
 
 def test_show_matches_concrete_path_against_template(run_cli):
