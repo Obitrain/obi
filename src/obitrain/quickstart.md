@@ -43,8 +43,16 @@ obi api /v1/user --json
 ## 3. Call the API
 
 ```bash
-obi api /v1/activities -q size=5 --json
+obi api /v1/training/sessions -q limit=5 --json
 ```
+
+`/v1/training/sessions` returns the authenticated user's own sessions; `/v1/activities` is the
+friends feed (other users' sessions) — don't use it to answer questions about the user's training.
+
+Endpoints that can return other users' data take a `scope` parameter (`me`, `all_visible`,
+`friends`, `groups`) — always pass it explicitly, `scope=me` for the user's own data. Never rely
+on the defaults: with `scope` omitted, `/v1/search/session` searches **all users'** visible
+sessions. The booleans `all_users`, `user_only`, `friends` and `only_groups` are deprecated.
 
 Use `--json` explicitly even though `obi` automatically selects plain JSON when stdout is not a
 TTY or a supported agent environment is detected.

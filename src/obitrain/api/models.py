@@ -1036,6 +1036,11 @@ class GroupSessionItem(TypedDict):
     cadence_max: NotRequired[int | None]
     power_avg: NotRequired[int | None]
     power_max: NotRequired[int | None]
+    np: NotRequired[int | None]
+    ftp: NotRequired[int | None]
+    intensity_factor: NotRequired[float | None]
+    vi: NotRequired[float | None]
+    tss: NotRequired[float | None]
     speed_avg: NotRequired[float | None]
     speed_max: NotRequired[float | None]
     pool_length: NotRequired[float | None]
@@ -1235,6 +1240,11 @@ class SessionItem(TypedDict):
     cadence_max: NotRequired[int | None]
     power_avg: NotRequired[int | None]
     power_max: NotRequired[int | None]
+    np: NotRequired[int | None]
+    ftp: NotRequired[int | None]
+    intensity_factor: NotRequired[float | None]
+    vi: NotRequired[float | None]
+    tss: NotRequired[float | None]
     speed_avg: NotRequired[float | None]
     speed_max: NotRequired[float | None]
     pool_length: NotRequired[float | None]
@@ -1300,6 +1310,11 @@ class SessionResp(TypedDict):
     cadence_max: int | None
     power_avg: int | None
     power_max: int | None
+    np: int | None
+    ftp: int | None
+    intensity_factor: float | None
+    vi: float | None
+    tss: float | None
     speed_avg: float | None
     speed_max: float | None
     pool_length: float | None

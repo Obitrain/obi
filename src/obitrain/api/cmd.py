@@ -23,7 +23,7 @@ def api_cmd(
     output: OutputFormat = OutputOpt,
     dry_run: bool = Option(False, '-n', '--dry-run', help='Print the resolved request without sending it.'),
 ):
-    """Make an authenticated request to any Obitrain API path (e.g. `obi api /v1/activities -q size=1`)."""
+    """Make an authenticated request to any Obitrain API path (e.g. `obi api /v1/training/sessions -q limit=1`)."""
     from obitrain.runner import execute
 
     execute(_run(config, path, method, data, query or [], header or [], output, dry_run))
