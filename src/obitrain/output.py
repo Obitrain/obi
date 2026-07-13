@@ -280,7 +280,10 @@ def render_operation(op: Any, *, console: Console | None = None) -> None:
         for column in ('name', 'in', 'required', 'type'):
             table.add_column(column, overflow='fold')
         for p in params:
-            table.add_row(p.get('name'), p.get('in'), _cell(p.get('required', False)), _schema_ref(p.get('schema')))
+            name = p.get('name')
+            if p.get('deprecated'):
+                name = f'[strike]{name}[/strike] [dim](deprecated)[/dim]'
+            table.add_row(name, p.get('in'), _cell(p.get('required', False)), _schema_ref(p.get('schema')))
         console.print(_panel(table, title='Parameters'))
     if body := op.get('request_body'):
         rows = [(media, _schema_ref(schema)) for media, schema in body.items()]
@@ -300,8 +303,13 @@ def _operation_header(op: dict[str, Any]) -> Panel:
     method = str(op['method']).upper()
     style = _METHOD_STYLES.get(method, 'cyan')
     lines = []
-    if summary := op.get('summary'):
+    summary = op.get('summary')
+    if summary:
         lines.append(f'[bold]{summary}[/bold]')
+    if description := op.get('description'):
+        # the description repeats the summary as its first line
+        if body := description.removeprefix(summary or '').strip():
+            lines.append(body)
     meta = [str(part) for part in (op.get('operation_id'), *(op.get('tags') or [])) if part]
     if meta:
         lines.append(f'[dim]{" · ".join(meta)}[/dim]')

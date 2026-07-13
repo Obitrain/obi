@@ -3,7 +3,7 @@
   "info": {
     "title": "Obitrain API",
     "description": "API Endpoint for Obitrain",
-    "version": "1.99.0"
+    "version": "1.104.0"
   },
   "paths": {
     "/v1/user/login": {
@@ -283,6 +283,7 @@
           "Auth endpoint"
         ],
         "summary": "User Forgot Pwd",
+        "description": "Password reset: with `email`, send the reset email; with `token`, redirect to the app deep link.",
         "operationId": "user_forgot_pwd_v1_user_forgot_pwd_get",
         "parameters": [
           {
@@ -1195,7 +1196,7 @@
           "User endpoint"
         ],
         "summary": "Get user stats",
-        "description": "Get user stats",
+        "description": "Get user stats\n\nAggregated stats of the authenticated user's own sessions (calories, distance,\nduration per sport), bucketed by day, week or month.",
         "operationId": "Get_user_stats_v1_stats_activity__range_type__get",
         "parameters": [
           {
@@ -1299,6 +1300,7 @@
           "Notification endpoint"
         ],
         "summary": "Send Device Apn Notification",
+        "description": "Send a push notification to an iOS device token via APNs (admin only).",
         "operationId": "send_device_apn_notification_v1_notification_apn_post",
         "parameters": [
           {
@@ -1356,6 +1358,7 @@
           "Notification endpoint"
         ],
         "summary": "Send Device Fcm Notification",
+        "description": "Send a push notification to an Android device via FCM (admin only).",
         "operationId": "send_device_fcm_notification_v1_notification_fcm_post",
         "parameters": [
           {
@@ -1573,9 +1576,9 @@
         "tags": [
           "Third-parties endpoint"
         ],
-        "summary": "The user needs to be logged in",
-        "description": "The user needs to be logged in",
-        "operationId": "The_user_needs_to_be_logged_in_v1_third_party_polar_get",
+        "summary": "Get the Polar OAuth authorization URL",
+        "description": "Get the Polar OAuth authorization URL",
+        "operationId": "Get_the_Polar_OAuth_authorization_URL_v1_third_party_polar_get",
         "parameters": [
           {
             "name": "obitrain",
@@ -1782,9 +1785,9 @@
         "tags": [
           "Third-parties endpoint"
         ],
-        "summary": "The user needs to be logged in",
-        "description": "The user needs to be logged in",
-        "operationId": "The_user_needs_to_be_logged_in_v1_third_party_suunto_get",
+        "summary": "Get the Suunto OAuth authorization URL",
+        "description": "Get the Suunto OAuth authorization URL",
+        "operationId": "Get_the_Suunto_OAuth_authorization_URL_v1_third_party_suunto_get",
         "parameters": [
           {
             "name": "obitrain",
@@ -2483,8 +2486,10 @@
                   "type": "null"
                 }
               ],
+              "description": "Inclusive start date",
               "title": "From Date"
-            }
+            },
+            "description": "Inclusive start date"
           },
           {
             "name": "to_date",
@@ -2500,8 +2505,10 @@
                   "type": "null"
                 }
               ],
+              "description": "Inclusive end date (defaults to today)",
               "title": "To Date"
-            }
+            },
+            "description": "Inclusive end date (defaults to today)"
           },
           {
             "name": "from_offset",
@@ -2517,8 +2524,10 @@
                   "type": "null"
                 }
               ],
+              "description": "Start row (0-based); use with to_offset to paginate",
               "title": "From Offset"
-            }
+            },
+            "description": "Start row (0-based); use with to_offset to paginate"
           },
           {
             "name": "to_offset",
@@ -2534,8 +2543,10 @@
                   "type": "null"
                 }
               ],
+              "description": "End row (exclusive); use with from_offset to paginate",
               "title": "To Offset"
-            }
+            },
+            "description": "End row (exclusive); use with from_offset to paginate"
           },
           {
             "name": "nb_exercises_min",
@@ -2585,8 +2596,10 @@
                   "type": "null"
                 }
               ],
+              "description": "Maximum number of sessions to return",
               "title": "Limit"
-            }
+            },
+            "description": "Maximum number of sessions to return"
           },
           {
             "name": "only_groups",
@@ -2594,9 +2607,35 @@
             "required": false,
             "schema": {
               "type": "boolean",
+              "description": "Deprecated: use `scope`. If true, return other group members' sessions shared via the user's training groups instead of the user's own",
+              "deprecated": true,
               "default": false,
               "title": "Only Groups"
-            }
+            },
+            "description": "Deprecated: use `scope`. If true, return other group members' sessions shared via the user's training groups instead of the user's own",
+            "deprecated": true
+          },
+          {
+            "name": "scope",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "me",
+                    "groups"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Data scope: `me` = the authenticated user's own sessions (default), `groups` = other group members' sessions shared via the user's training groups. Takes precedence over `only_groups`",
+              "title": "Scope"
+            },
+            "description": "Data scope: `me` = the authenticated user's own sessions (default), `groups` = other group members' sessions shared via the user's training groups. Takes precedence over `only_groups`"
           },
           {
             "name": "third_party",
@@ -2604,9 +2643,11 @@
             "required": false,
             "schema": {
               "type": "boolean",
+              "description": "Only sessions synced from a third-party source (excludes manual entries)",
               "default": false,
               "title": "Third Party"
-            }
+            },
+            "description": "Only sessions synced from a third-party source (excludes manual entries)"
           },
           {
             "name": "lang",
@@ -3002,9 +3043,9 @@
         "tags": [
           "Exercises endpoint"
         ],
-        "summary": "Check if the exercise name if taken or not",
-        "description": "Check if the exercise name if taken or not",
-        "operationId": "Check_if_the_exercise_name_if_taken_or_not_v1_training_exercise_name_get",
+        "summary": "Check if the exercise name is taken or not",
+        "description": "Check if the exercise name is taken or not",
+        "operationId": "Check_if_the_exercise_name_is_taken_or_not_v1_training_exercise_name_get",
         "parameters": [
           {
             "name": "name",
@@ -3071,9 +3112,35 @@
             "required": false,
             "schema": {
               "type": "boolean",
+              "description": "Deprecated: use `scope`. Include friends' exercises as well as the user's own",
+              "deprecated": true,
               "default": false,
               "title": "Friends"
-            }
+            },
+            "description": "Deprecated: use `scope`. Include friends' exercises as well as the user's own",
+            "deprecated": true
+          },
+          {
+            "name": "scope",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "me",
+                    "friends"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Data scope: `me` = only the authenticated user's own exercises (default), `friends` = friends' exercises as well. Takes precedence over `friends`",
+              "title": "Scope"
+            },
+            "description": "Data scope: `me` = only the authenticated user's own exercises (default), `friends` = friends' exercises as well. Takes precedence over `friends`"
           },
           {
             "name": "offset",
@@ -3404,9 +3471,35 @@
             "required": false,
             "schema": {
               "type": "boolean",
+              "description": "Deprecated: use `scope`. Include friends' equipment as well as the user's own",
+              "deprecated": true,
               "default": false,
               "title": "Friends"
-            }
+            },
+            "description": "Deprecated: use `scope`. Include friends' equipment as well as the user's own",
+            "deprecated": true
+          },
+          {
+            "name": "scope",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "me",
+                    "friends"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Data scope: `me` = only the authenticated user's own equipment (default), `friends` = friends' equipment as well. Takes precedence over `friends`",
+              "title": "Scope"
+            },
+            "description": "Data scope: `me` = only the authenticated user's own equipment (default), `friends` = friends' equipment as well. Takes precedence over `friends`"
           },
           {
             "name": "offset",
@@ -3780,7 +3873,7 @@
           "Activities"
         ],
         "summary": "Get friends activity",
-        "description": "Get friends activity",
+        "description": "Get friends activity\n\nSocial feed of recent training sessions from the authenticated user's friends.\nThis is not the user's own training history \u2014 use `/v1/training/sessions` for that.",
         "operationId": "Get_friends_activity_v1_activities_get",
         "parameters": [
           {
@@ -3806,9 +3899,11 @@
             "schema": {
               "type": "integer",
               "minimum": 0,
+              "description": "Pagination offset (0-based)",
               "default": 0,
               "title": "Offset"
-            }
+            },
+            "description": "Pagination offset (0-based)"
           },
           {
             "name": "size",
@@ -3817,9 +3912,11 @@
             "schema": {
               "type": "integer",
               "exclusiveMinimum": 0,
+              "description": "Page size (capped at 100)",
               "default": 50,
               "title": "Size"
-            }
+            },
+            "description": "Page size (capped at 100)"
           },
           {
             "name": "obitrain",
@@ -4828,7 +4925,7 @@
           "Data search endpoint"
         ],
         "summary": "Search Training sessions",
-        "description": "Search Training sessions",
+        "description": "Search Training sessions\n\nSearches all users' visible sessions by default; pass `scope=me` to restrict\nresults to the authenticated user's own sessions.",
         "operationId": "Search_Training_sessions_v1_search_session_get",
         "parameters": [
           {
@@ -4856,9 +4953,11 @@
             "required": false,
             "schema": {
               "type": "boolean",
+              "description": "Return only matching names (plain strings) instead of full items",
               "default": false,
               "title": "Name Only"
-            }
+            },
+            "description": "Return only matching names (plain strings) instead of full items"
           },
           {
             "name": "has_exercises",
@@ -4892,9 +4991,35 @@
             "required": false,
             "schema": {
               "type": "boolean",
+              "description": "Deprecated: use `scope`. If true (default), search all users' visible sessions",
+              "deprecated": true,
               "default": true,
               "title": "All Users"
-            }
+            },
+            "description": "Deprecated: use `scope`. If true (default), search all users' visible sessions",
+            "deprecated": true
+          },
+          {
+            "name": "scope",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "me",
+                    "all_visible"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Data scope: `me` = only the authenticated user's own sessions, `all_visible` = all users' visible sessions. Takes precedence over `all_users`",
+              "title": "Scope"
+            },
+            "description": "Data scope: `me` = only the authenticated user's own sessions, `all_visible` = all users' visible sessions. Takes precedence over `all_users`"
           },
           {
             "name": "obitrain",
@@ -5022,7 +5147,7 @@
           "Data search endpoint"
         ],
         "summary": "Search exercises",
-        "description": "Search exercises",
+        "description": "Search exercises\n\nResults mix public exercises with the user's own; pass `scope=me` to restrict\nto the user's.",
         "operationId": "Search_exercises_v1_search_exercise_get",
         "parameters": [
           {
@@ -5130,9 +5255,35 @@
             "required": false,
             "schema": {
               "type": "boolean",
+              "description": "Deprecated: use `scope`. If true, only the authenticated user's own items",
+              "deprecated": true,
               "default": false,
               "title": "User Only"
-            }
+            },
+            "description": "Deprecated: use `scope`. If true, only the authenticated user's own items",
+            "deprecated": true
+          },
+          {
+            "name": "scope",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "me",
+                    "all_visible"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Data scope: `me` = only the authenticated user's own exercises, `all_visible` = public exercises as well (default). Takes precedence over `user_only`",
+              "title": "Scope"
+            },
+            "description": "Data scope: `me` = only the authenticated user's own exercises, `all_visible` = public exercises as well (default). Takes precedence over `user_only`"
           },
           {
             "name": "obitrain",
@@ -5264,7 +5415,7 @@
           "Data search endpoint"
         ],
         "summary": "Get search infos",
-        "description": "Get search infos",
+        "description": "Get search infos\n\nThe user's search history for the data type: the 5 most recent and the 5 most\nfrequent search texts.",
         "operationId": "Get_search_infos_v1_search__data_type__infos_get",
         "parameters": [
           {
@@ -5328,7 +5479,7 @@
           "Data search endpoint"
         ],
         "summary": "Add new searched item",
-        "description": "Add new searched item",
+        "description": "Add new searched item\n\nRecords a performed search so it shows up in the search history.",
         "operationId": "Add_new_searched_item_v1_search__data_type__infos_post",
         "parameters": [
           {
@@ -5477,7 +5628,7 @@
           "Data search endpoint"
         ],
         "summary": "Search training templates",
-        "description": "Search training templates",
+        "description": "Search training templates\n\nResults mix public templates with the user's own; pass `scope=me` to restrict\nto the user's.",
         "operationId": "Search_training_templates_v1_search_templates_get",
         "parameters": [
           {
@@ -5534,9 +5685,35 @@
             "required": false,
             "schema": {
               "type": "boolean",
+              "description": "Deprecated: use `scope`. If true, only the authenticated user's own items",
+              "deprecated": true,
               "default": false,
               "title": "User Only"
-            }
+            },
+            "description": "Deprecated: use `scope`. If true, only the authenticated user's own items",
+            "deprecated": true
+          },
+          {
+            "name": "scope",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "me",
+                    "all_visible"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Data scope: `me` = only the authenticated user's own templates, `all_visible` = public templates as well (default). Takes precedence over `user_only`",
+              "title": "Scope"
+            },
+            "description": "Data scope: `me` = only the authenticated user's own templates, `all_visible` = public templates as well (default). Takes precedence over `user_only`"
           },
           {
             "name": "obitrain",
@@ -6038,7 +6215,7 @@
           "Measurement"
         ],
         "summary": "Get the last measurements values",
-        "description": "Get the last measurements values",
+        "description": "Get the last measurements values\n\nLatest recorded value of each measurement field for the authenticated user.",
         "operationId": "Get_the_last_measurements_values_v1_stats_measurements_get",
         "parameters": [
           {
@@ -6579,6 +6756,7 @@
           "internal"
         ],
         "summary": "Get Users",
+        "description": "Reset and recreate the e2e test users for the given prefix.",
         "operationId": "get_users_v1_e2e_get_users_post",
         "parameters": [
           {
@@ -8788,6 +8966,61 @@
             ],
             "title": "Power Max"
           },
+          "np": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Np"
+          },
+          "ftp": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ftp"
+          },
+          "intensity_factor": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Intensity Factor"
+          },
+          "vi": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Vi"
+          },
+          "tss": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tss"
+          },
           "speed_avg": {
             "anyOf": [
               {
@@ -9271,7 +9504,8 @@
         "properties": {
           "offset": {
             "type": "integer",
-            "title": "Offset"
+            "title": "Offset",
+            "description": "Offset to pass to fetch the next page"
           },
           "activities": {
             "items": {
@@ -12509,6 +12743,61 @@
             ],
             "title": "Power Max"
           },
+          "np": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Np"
+          },
+          "ftp": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ftp"
+          },
+          "intensity_factor": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Intensity Factor"
+          },
+          "vi": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Vi"
+          },
+          "tss": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tss"
+          },
           "speed_avg": {
             "anyOf": [
               {
@@ -13085,6 +13374,61 @@
             ],
             "title": "Power Max"
           },
+          "np": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Np"
+          },
+          "ftp": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ftp"
+          },
+          "intensity_factor": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Intensity Factor"
+          },
+          "vi": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Vi"
+          },
+          "tss": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tss"
+          },
           "speed_avg": {
             "anyOf": [
               {
@@ -13212,6 +13556,11 @@
           "cadence_max",
           "power_avg",
           "power_max",
+          "np",
+          "ftp",
+          "intensity_factor",
+          "vi",
+          "tss",
           "speed_avg",
           "speed_max",
           "pool_length",
@@ -13435,7 +13784,7 @@
             "anyOf": [
               {
                 "type": "integer",
-                "minimum": 0.0
+                "exclusiveMinimum": 0.0
               },
               {
                 "type": "null"
@@ -13527,7 +13876,7 @@
             "anyOf": [
               {
                 "type": "integer",
-                "minimum": 0.0
+                "exclusiveMinimum": 0.0
               },
               {
                 "type": "null"
@@ -15281,7 +15630,7 @@
     },
     {
       "name": "Activities",
-      "description": "Get friends activity"
+      "description": "Friends activity feed (not the user's own sessions)"
     },
     {
       "name": "Friends"

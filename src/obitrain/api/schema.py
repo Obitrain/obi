@@ -42,7 +42,9 @@ def list_ops(
     output: OutputFormat = OutputOpt,
     tag: str | None = Option(None, '--tag', help='Only operations with this tag.'),
     grep: str | None = Option(
-        None, '--grep', help='Filter by substring in path, operation id, summary, tags, params or schema fields.'
+        None,
+        '--grep',
+        help='Filter by substring in path, operation id, summary, description, tags, params or schema fields.',
     ),
 ):
     ops = _operations()
@@ -55,11 +57,17 @@ def list_ops(
 
 
 def _haystack(method: str, path: str) -> str:
-    """Lowercase search text for one operation: path, id, summary, tags, parameter names and enum
-    values, plus referenced schema names and their property names — so `--grep distance` finds the
-    operations whose payloads carry a `distance` field."""
+    """Lowercase search text for one operation: path, id, summary, description, tags, parameter
+    names and enum values, plus referenced schema names and their property names — so
+    `--grep distance` finds the operations whose payloads carry a `distance` field."""
     op = _spec()['paths'][path][method.lower()]
-    parts = [path, op.get('operationId') or '', op.get('summary') or '', *op.get('tags', [])]
+    parts = [
+        path,
+        op.get('operationId') or '',
+        op.get('summary') or '',
+        op.get('description') or '',
+        *op.get('tags', []),
+    ]
     for param in op.get('parameters', []):
         parts.append(param.get('name') or '')
         parts.extend(str(v) for v in (param.get('schema') or {}).get('enum') or [])
@@ -86,17 +94,20 @@ def show_op(
 ):
     with guard():
         op, path, verb = _find_operation(ref, method)
+        description = op.get('description')
         payload = {
             'method': verb.upper(),
             'path': path,
             'operation_id': op.get('operationId'),
             'tags': op.get('tags', []),
             'summary': op.get('summary'),
+            'description': description if description != op.get('summary') else None,
             'parameters': [
                 {
                     'name': p.get('name'),
                     'in': p.get('in'),
                     'required': p.get('required', False),
+                    'deprecated': p.get('deprecated', False),
                     'schema': p.get('schema'),
                 }
                 for p in op.get('parameters', [])

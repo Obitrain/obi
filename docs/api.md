@@ -10,13 +10,13 @@ obi api <PATH> [-X METHOD] [-d DATA] [-q k=v ...] [-H k:v ...] [-o FORMAT] [--js
 ## Examples
 
 ```bash
-obi api /v1/activities -q size=1                 # GET with a query param
-obi api /v1/training/sessions -q limit=10 from_offset=0
+obi api /v1/user                                 # simple GET
+obi api /v1/training/sessions -q limit=10 from_offset=0   # GET with query params
 obi api /v1/user -X PATCH -d '{"lang":"fr"}'     # JSON body
 obi api /v1/user -X PATCH -d @patch.json         # body from a file
 printf '%s\n' '{"lang":"fr"}' | obi api /v1/user -X PATCH -d @-
 obi api /v1/user -o yaml                          # YAML output
-obi api /v1/activities -n                         # dry run: print the request, send nothing
+obi api /v1/user -n                               # dry run: print the request, send nothing
 ```
 
 ## Options
