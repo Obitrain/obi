@@ -3,7 +3,7 @@
   "info": {
     "title": "Obitrain API",
     "description": "API Endpoint for Obitrain",
-    "version": "1.99.0"
+    "version": "1.102.0"
   },
   "paths": {
     "/v1/user/login": {
@@ -8788,6 +8788,61 @@
             ],
             "title": "Power Max"
           },
+          "np": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Np"
+          },
+          "ftp": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ftp"
+          },
+          "intensity_factor": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Intensity Factor"
+          },
+          "vi": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Vi"
+          },
+          "tss": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tss"
+          },
           "speed_avg": {
             "anyOf": [
               {
@@ -12509,6 +12564,61 @@
             ],
             "title": "Power Max"
           },
+          "np": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Np"
+          },
+          "ftp": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ftp"
+          },
+          "intensity_factor": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Intensity Factor"
+          },
+          "vi": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Vi"
+          },
+          "tss": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tss"
+          },
           "speed_avg": {
             "anyOf": [
               {
@@ -13085,6 +13195,61 @@
             ],
             "title": "Power Max"
           },
+          "np": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Np"
+          },
+          "ftp": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ftp"
+          },
+          "intensity_factor": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Intensity Factor"
+          },
+          "vi": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Vi"
+          },
+          "tss": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tss"
+          },
           "speed_avg": {
             "anyOf": [
               {
@@ -13212,6 +13377,11 @@
           "cadence_max",
           "power_avg",
           "power_max",
+          "np",
+          "ftp",
+          "intensity_factor",
+          "vi",
+          "tss",
           "speed_avg",
           "speed_max",
           "pool_length",
@@ -13435,7 +13605,7 @@
             "anyOf": [
               {
                 "type": "integer",
-                "minimum": 0.0
+                "exclusiveMinimum": 0.0
               },
               {
                 "type": "null"
@@ -13527,7 +13697,7 @@
             "anyOf": [
               {
                 "type": "integer",
-                "minimum": 0.0
+                "exclusiveMinimum": 0.0
               },
               {
                 "type": "null"
