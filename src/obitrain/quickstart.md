@@ -138,7 +138,7 @@ Build a strength session — reference catalog exercises (ids from `/v1/training
 `/v1/search/exercise`), give each a metric as a `{"real", "objective"}` pair (objective = target,
 real = achieved, `-1` = "to max"; `bpm` and `vo2max` take `[min, max]` tuples), and group circuit
 rounds with `groups` + `group_position` (`nb_reps` = rounds; exercises are duplicated per round
-unless `"duplicate": false`; `skip_last` drops the last round's final exercise):
+unless `"duplicate": false`):
 
 ```bash
 obi api /v1/training/session -X POST --json -d '{
@@ -158,6 +158,12 @@ are replaced only when provided):
 ```bash
 obi api /v1/training/session -X PATCH --json -d '{"id": "<session id>", "status": 1}'
 ```
+
+A group's `skip_last` hides the last round's final exercise (typically the trailing rest).
+The mobile app treats it as a display flag over fully-expanded rows — so when setting
+`skip_last`, send `"duplicate": false` with every round written out (including the trailing
+rest); letting the server drop the row (`duplicate` true) makes the app render an empty last
+round.
 
 When reading a session back, per-exercise data is under `metrics[]` (with `position` and
 `group_id`); `exercises[]` is the deduplicated catalog list.
