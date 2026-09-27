@@ -501,15 +501,15 @@ wheels = [
 
 [[package]]
 name = "piou"
-version = "0.35.2"
+version = "0.35.5"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "rich" },
     { name = "typing-extensions" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/76/cc/2c54bacbdd4cca56fc22e9c6ab08987526dcf63d6ac5d1764c45e57e10dd/piou-0.35.2.tar.gz", hash = "sha256:bfedb9f08574f4f06fe221809d345940a26043bca7faa2bb3024611c61d95f13", size = 1647463, upload-time = "2026-06-04T20:02:00.579Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/c4/e0/0e7121e9ecd93e8857a4d1790d6c9507263e0a7700010b8704285f327bb7/piou-0.35.5.tar.gz", hash = "sha256:eaaed4da69675a3a313cfdf512cc7105579f8e3a9eb9bb40e86d179def136e52", size = 1647940, upload-time = "2026-07-14T05:09:45.478Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/bc/06/41b05685f229c328f7c5ef35879fd54c9d68baa7f8bbe360a4bbbe85af9a/piou-0.35.2-py3-none-any.whl", hash = "sha256:34a95558d25c7db2b62cc014cc9c5c718f4a5583372aad5abfa5f6f504d2cb9d", size = 55275, upload-time = "2026-06-04T20:02:01.861Z" },
+    { url = "https://files.pythonhosted.org/packages/f2/4d/5dd8b7b03d0cb46c0c07698e273bc103ca9148d0a686c7f013ac93f3586d/piou-0.35.5-py3-none-any.whl", hash = "sha256:1caaa8effd88d71e285f5490926d007f82ed04242741a8131c87b6c45ec06ba5", size = 55358, upload-time = "2026-07-14T05:09:44.033Z" },
 ]
 
 [[package]]
